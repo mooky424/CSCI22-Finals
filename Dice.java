@@ -15,9 +15,10 @@ public class Dice {
 	}
 	
 	public int rollDice(){
-		//randomizer 1-6
+		return Math.();
 	}
   
-  public adjustX(){
-  }
+	public adjustX(){
+
+	}
 }
