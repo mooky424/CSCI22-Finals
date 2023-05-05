@@ -8,6 +8,7 @@ public class Player {
     private DataInputStream in;
     private DataOutputStream out;
     private Scanner userInput;
+    private int id;
 
     public Player() {
         userInput = new Scanner(System.in);
@@ -15,27 +16,40 @@ public class Player {
             s = new Socket("localhost", 64820);
             in = new DataInputStream(s.getInputStream());
             out = new DataOutputStream(s.getOutputStream());
-            receiveMessages rm = new receiveMessages();
-            rm.run();
-            while(true) {
-                out.writeUTF(userInput.nextLine());
-                out.flush();
-            }
+            id = in.readInt();
+
+            Thread receiveMessages = new Thread() {
+                public void run(){
+                    while (true) {
+                        try {
+                            String msg = in.readUTF();
+                            System.out.println(msg);
+                        } catch (IOException ex) {
+                            System.out.println("Error at receiveMessages: " + ex);
+                        }
+                    }
+                }
+            };
+
+            Thread sendMessages = new Thread() {
+                public void run(){
+                    while (true) {
+                        try {
+                            //System.out.print("Client " + id + ": ");
+                            out.writeUTF(userInput.nextLine());
+                            out.flush();
+                        } catch (IOException ex) {
+                            System.out.println("Error at sendMessages: " + ex);
+                        }
+                    }
+                }
+            };
+
+            receiveMessages.start();
+            sendMessages.start();
+            
         } catch (IOException ex) {
             System.out.println("Error: " + ex);
-        }
-    }
-
-    private class receiveMessages implements Runnable {
-        public void run(){
-            try {
-                while (true){
-                    String msg = in.readUTF();
-                    System.out.println(msg);
-                }
-            } catch (IOException ex) {
-                System.out.println("Error at receiveMessages: " + ex);
-            }
         }
     }
 

@@ -14,7 +14,7 @@ import java.util.*;
             while (true){
                 Socket s = ss.accept();
                 clients.add(new ClientThread(s, currentUsers));
-                clients.get(currentUsers++).run();
+                currentUsers++;
             }
             
         } catch (IOException ex){
@@ -26,6 +26,7 @@ import java.util.*;
 
         Socket s;
         int id;
+        Thread t;
         DataInputStream in;
         DataOutputStream out;
 
@@ -35,17 +36,20 @@ import java.util.*;
             try {
                 in = new DataInputStream(s.getInputStream());
                 out = new DataOutputStream(s.getOutputStream());
+                out.writeInt(currentUsers);
             } catch (Exception ex) {
                 System.out.println("Error at ClientThread constructor: " + ex);
             }
+            t = new Thread(this, Integer.toString(id));
+            t.start();
         }
 
         public void run(){
             try {
                 while(true) {
-                    String msg = in.readUTF();
-                    sendToAll(msg);
-                    System.out.println(id + " says " + msg);
+                    String msg = "Client " + id + ": " + in.readUTF();
+                    sendToAll(msg, id);
+                    System.out.println(msg);
                 }
             } catch (IOException ex) {
                 System.out.println("Error at ClientThread: " + ex);
@@ -62,9 +66,10 @@ import java.util.*;
         }
     }
 
-    private void sendToAll(String msg){
+    private void sendToAll(String msg, int id){
         for (ClientThread ct : clients){
-            ct.write(msg);
+            if (ct != clients.get(id))
+                ct.write(msg);
         }
     }
             
