@@ -8,7 +8,8 @@ public class GameFrame {
     private JFrame frame;
     private Container cp;
     private GameCanvas gc;
-    private JButton play, quit, createUser;
+    private JButton play, quit, createUser, edit, challenge;
+    private JRadioButton sixDice, specialDice;
 
     public GameFrame(int w, int h) {
         frame = new JFrame();
@@ -57,8 +58,8 @@ public class GameFrame {
 
     public void setupCharSelect(){
         cp.removeAll();
-
         cp.setLayout(new GridLayout(3,3));
+
         JPanel characterPanel = new JPanel(new BorderLayout());
         JPanel avatarPanel = new JPanel();
         JPanel userPanel = new JPanel();
@@ -104,14 +105,44 @@ public class GameFrame {
 
     public void setupLobbyGUI(){
         cp.removeAll();
+        cp.setLayout(new BorderLayout());
 
+        JPanel userLobbyPanel = new JPanel();
+        JPanel optionsLobbyPanel = new JPanel(new GridLayout(1,3));
+        JPanel editAvatarPanel = new JPanel();
+        editAvatarPanel.setLayout(new BoxLayout(editAvatarPanel, BoxLayout.PAGE_AXIS));
+        JPanel modeSelectPanel = new JPanel();
+        JPanel challengePanel = new JPanel();
+
+        edit = new JButton("Edit");
+        ButtonGroup modeSelect = new ButtonGroup();
+        sixDice = new JRadioButton("Six Dice", true);
+        specialDice = new JRadioButton("Special Dice", false);
+        challenge = new JButton("Challenge");
+        
+        modeSelect.add(sixDice);
+        modeSelect.add(specialDice);
+
+        editAvatarPanel.add(edit);
+
+        modeSelectPanel.add(sixDice);
+        modeSelectPanel.add(specialDice);
+
+        challengePanel.add(challenge);
+
+        optionsLobbyPanel.add(editAvatarPanel);
+        optionsLobbyPanel.add(modeSelectPanel);
+        optionsLobbyPanel.add(challengePanel);
+        optionsLobbyPanel.setPreferredSize(new Dimension(200, 200));
+
+        cp.add(userLobbyPanel, BorderLayout.CENTER);
+        cp.add(optionsLobbyPanel, BorderLayout.SOUTH);
 
         cp.revalidate();
         cp.repaint();
     }
 
     public void setupGameGUI(){
-        Container cp = frame.getContentPane();
 
         
     }
