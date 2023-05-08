@@ -3,11 +3,12 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.util.*;
 
-public class GameCanvas extends JComponent{
+public class LobbyCanvas extends JComponent{
 
-    private double width, height;
+    private double width;
+    private double height;
 
-    public GameCanvas(int w, int h) {
+    public void LobbyCanvas(int w, int h){
         width = w;
         height = h;
     }
