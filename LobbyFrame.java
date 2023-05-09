@@ -2,169 +2,152 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.*;
+import java.net.*;
+import java.io.*;
 
 public class LobbyFrame {
     
     private JFrame frame;
     private Container cp;
+    private MainMenuGUI mm;
+    private CharacterSelectGUI cs;
+    private LobbyMenuGUI lm;
     private GameCanvas gc;
-    private JButton play, quit, createUser, edit, challenge;
+    private JButton createUser, edit, challenge;
     private JRadioButton sixDice, specialDice;
+    private Socket s;
+    private DataInputStream in;
+    private DataOutputStream out;
+
+    private ArrayList<String> updates;
+    private ArrayList<ConnectedUser> connected;
+    private int currentUsers;
 
     public LobbyFrame(int w, int h) {
         frame = new JFrame();
-        frame.setPreferredSize(new Dimension(w,h));
+        frame.setMinimumSize(new Dimension(w,h));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gc = new GameCanvas(w, h);
+        cs = new CharacterSelectGUI(frame, buttonListener);
+        mm = new MainMenuGUI(frame, buttonListener);
+        lm = new LobbyMenuGUI(frame, buttonListener);
         cp = frame.getContentPane();
+
+        connected = new ArrayList<ConnectedUser>();
     }
 
     public void setupMainMenu(){
-        cp.removeAll();
-        cp.setLayout(new GridLayout(1,3));
-
-        JPanel optionsPanel = new JPanel(new GridLayout(3, 1));
-        JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.PAGE_AXIS));
-        
-        play = new JButton("Play");
-        quit = new JButton("Quit");
-
-        play.setAlignmentX(Component.CENTER_ALIGNMENT);
-        quit.setAlignmentX(Component.CENTER_ALIGNMENT);
-        play.setMinimumSize(new Dimension (50,20));
-        play.setMaximumSize(new Dimension (100,40));
-        quit.setMinimumSize(new Dimension (50,20));
-        quit.setMaximumSize(new Dimension (100,40));
-
-        buttonsPanel.add(play);
-        buttonsPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        buttonsPanel.add(quit);
-
-        optionsPanel.add(new JPanel());
-        optionsPanel.add(new JPanel());
-        optionsPanel.add(buttonsPanel);
-        
-        setupButtonListeners(play);
-        setupButtonListeners(quit);
-
-        frame.add(new JPanel());
-        frame.add(optionsPanel);
-        frame.add(new JPanel());
-
+        cp.add(mm);
         frame.pack();
         frame.setVisible(true);
     }
 
     public void setupCharSelect(){
         cp.removeAll();
-        cp.setLayout(new GridLayout(3,3));
-
-        JPanel characterPanel = new JPanel(new BorderLayout());
-        JPanel avatarPanel = new JPanel();
-        JPanel userPanel = new JPanel();
-        userPanel.setLayout(new BoxLayout(userPanel, BoxLayout.PAGE_AXIS));
-
-        JTextField usernameField= new JTextField("Username");
-        usernameField.setAlignmentX(Component.CENTER_ALIGNMENT);
-        usernameField.setMaximumSize(new Dimension(150,20));
-        usernameField.setHorizontalAlignment(JTextField.CENTER);
-        
-        createUser = new JButton("Create User");
-        createUser.setAlignmentX(Component.CENTER_ALIGNMENT);
-        createUser.setMaximumSize(new Dimension(120,20));
-
-        JLabel temp = new JLabel("temp");
-
-        avatarPanel.add(temp);
-
-        userPanel.add(usernameField);
-        userPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-        userPanel.add(createUser);
-
-        characterPanel.add(avatarPanel, BorderLayout.CENTER);
-        characterPanel.add(userPanel, BorderLayout.SOUTH);
-
-        characterPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-
-        cp.add(new JPanel());
-        cp.add(new JPanel());
-        cp.add(new JPanel());
-        cp.add(new JPanel());
-        cp.add(characterPanel, BorderLayout.CENTER);
-        cp.add(new JPanel());
-        cp.add(new JPanel());
-        cp.add(new JPanel());
-        cp.add(new JPanel());
-
-        setupButtonListeners(createUser);
-
+        cp.add(cs);
         cp.revalidate();
         cp.repaint();
     }
 
     public void setupLobbyGUI(){
         cp.removeAll();
-        cp.setLayout(new BorderLayout());
-
-        JPanel userLobbyPanel = new JPanel();
-        JPanel optionsLobbyPanel = new JPanel(new GridLayout(1,3));
-        JPanel editAvatarPanel = new JPanel();
-        editAvatarPanel.setLayout(new BoxLayout(editAvatarPanel, BoxLayout.PAGE_AXIS));
-        JPanel modeSelectPanel = new JPanel();
-        JPanel challengePanel = new JPanel();
-
-        edit = new JButton("Edit");
-        ButtonGroup modeSelect = new ButtonGroup();
-        sixDice = new JRadioButton("Six Dice", true);
-        specialDice = new JRadioButton("Special Dice", false);
-        challenge = new JButton("Challenge");
-        
-        modeSelect.add(sixDice);
-        modeSelect.add(specialDice);
-
-        editAvatarPanel.add(edit);
-
-        modeSelectPanel.add(sixDice);
-        modeSelectPanel.add(specialDice);
-
-        challengePanel.add(challenge);
-
-        optionsLobbyPanel.add(editAvatarPanel);
-        optionsLobbyPanel.add(modeSelectPanel);
-        optionsLobbyPanel.add(challengePanel);
-        optionsLobbyPanel.setPreferredSize(new Dimension(200, 200));
-
-        cp.add(userLobbyPanel, BorderLayout.CENTER);
-        cp.add(optionsLobbyPanel, BorderLayout.SOUTH);
-
+        cp.add(lm);
         cp.revalidate();
         cp.repaint();
     }
 
     public void setupGameGUI(){
-
+        cp.removeAll();
         
     }
 
-    public void setupButtonListeners(JButton button){
-        ActionListener buttonListener = new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent ae){
-                Object source = ae.getSource();
+    ActionListener buttonListener = new ActionListener(){
+        @Override
+        public void actionPerformed(ActionEvent ae){
+            Object source = ae.getSource();
+            if (source == mm.play) {
+                try{
 
-                if (source == play) {
+                    s = new Socket("localhost", 64820);
+                    in = new DataInputStream(s.getInputStream());
+                    out = new DataOutputStream(s.getOutputStream());
+                    setUpServerThread();
+                } catch (IOException ex) {
+                    System.out.println("Error connecting to server");
+                } finally {
                     setupCharSelect();
                 }                
-                if (source == quit){
-                    frame.dispose();
+            }
+            if (source == mm.quit){
+                frame.dispose();
+            }
+            if (source == cs.createUser){
+                setupLobbyGUI();
+                try {
+                    String username = cs.usernameField.getText();
+                    String icon = Integer.toString(cs.currentImage);
+                    out.writeUTF("create " + username + " " + icon);
+                } catch (Exception e) {
+                    // TODO: handle exception
                 }
-                if (source == createUser){
-                    setupLobbyGUI();
+            }
+        }
+    };
+
+    private void setUpServerThread(){
+        Thread serverUpdatesThread = new Thread("Server Updates"){
+            public void run(){
+                try {
+                    System.out.println("Thread is up");
+                    while(true){
+                        parseCommand(in.readUTF());                        
+                    }
+                } catch (Exception e) {
+                    // TODO: handle exception
                 }
             }
         };
-        button.addActionListener(buttonListener);
+
+        serverUpdatesThread.start();
     }
 
+    public void addUser(String username, int icon){
+        connected.add(new ConnectedUser(username, icon, mouseListener));
+        lm.updateConnected(connected);
+    }
+
+    private void parseCommand(String command){
+        String[] c = command.split(" ");
+        if (c[0].equals("addUser")){
+            String username = c[2];
+            int icon = Integer.parseInt(c[3]);
+            addUser(username,icon);
+        }
+    }
+
+    MouseListener mouseListener = new MouseAdapter() {
+        ConnectedUser selected;
+        ConnectedUser hovered;
+        public void mouseEntered(MouseEvent me){
+            hovered = (ConnectedUser) me.getSource();
+            hovered.setBorder(BorderFactory.createLineBorder(Color.RED, 5));
+        }
+        public void mouseExited(MouseEvent me){
+            if (hovered != selected)
+                hovered.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+            }
+            public void mouseClicked(MouseEvent me){
+                if (selected != hovered){
+                    if (selected != null){
+                        selected.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                    }
+                selected = (ConnectedUser) me.getSource();
+                selected.setBorder(BorderFactory.createLineBorder(Color.RED, 5));
+                
+                } else {
+                    selected.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                    selected = null;
+                }
+        }
+    };
 }
