@@ -6,7 +6,7 @@ public class MainMenuGUI extends JPanel {
 
     protected JButton play, quit;
 
-    MainMenuGUI(JFrame frame, ActionListener buttonListener){
+    MainMenuGUI(ActionListener buttonListener){
         
         setLayout(new GridLayout(1,3));
 

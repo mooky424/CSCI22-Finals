@@ -1,59 +1,57 @@
 import java.net.*;
+import java.awt.Graphics2D;
 import java.io.*;
 import java.util.*;
 
-public class Player {
+public class Player implements Sprite{
 
-    private Socket s;
-    private DataInputStream in;
-    private DataOutputStream out;
-    private Scanner userInput;
     private int id;
+    private String username;
+    private int icon;
 
     public Player() {
-        userInput = new Scanner(System.in);
-        try {
-            s = new Socket("localhost", 64820);
-            in = new DataInputStream(s.getInputStream());
-            out = new DataOutputStream(s.getOutputStream());
-            id = in.readInt();
-
-            Thread receiveMessages = new Thread() {
-                public void run(){
-                    while (true) {
-                        try {
-                            String msg = in.readUTF();
-                            System.out.println(msg);
-                        } catch (IOException ex) {
-                            System.out.println("Error at receiveMessages: " + ex);
-                        }
-                    }
-                }
-            };
-
-            Thread sendMessages = new Thread() {
-                public void run(){
-                    while (true) {
-                        try {
-                            //System.out.print("Client " + id + ": ");
-                            out.writeUTF(userInput.nextLine());
-                            out.flush();
-                        } catch (IOException ex) {
-                            System.out.println("Error at sendMessages: " + ex);
-                        }
-                    }
-                }
-            };
-
-            receiveMessages.start();
-            sendMessages.start();
-            
-        } catch (IOException ex) {
-            System.out.println("Error: " + ex);
-        }
+       
     }
 
-    public static void main(String[] args){
-        Player p = new Player();
+    @Override
+    public void draw(Graphics2D g2d) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'draw'");
+    }
+
+    @Override
+    public void adjustX(double distance) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'adjustX'");
+    }
+
+    @Override
+    public void adjustY(double distance) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'adjustY'");
+    }
+
+    @Override
+    public void adjustAngle(double degree) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'adjustAngle'");
+    }
+
+    @Override
+    public double getX() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getX'");
+    }
+
+    @Override
+    public double getY() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getY'");
+    }
+
+    @Override
+    public double getAngle() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAngle'");
     }
 }

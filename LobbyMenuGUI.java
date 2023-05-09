@@ -6,12 +6,14 @@ import java.util.*;
 public class LobbyMenuGUI extends JPanel{
 
     JPanel currentUsersPanel;
+    JLabel avatar;
+    JLabel username;
 
     protected JButton edit, challenge;
     protected JRadioButton sixDice, specialDice;
     protected ArrayList<JButton> currentUsers = new ArrayList<JButton>();
 
-    LobbyMenuGUI(JFrame frame, ActionListener buttonListener){
+    LobbyMenuGUI(ActionListener buttonListener){
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
@@ -31,9 +33,8 @@ public class LobbyMenuGUI extends JPanel{
         
         JPanel challengePanel = new JPanel();
 
-        ImageIcon icon = new ImageIcon((new ImageIcon("./assets/icons/sample.png")).getImage().getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH));
-        JLabel avatar = new JLabel(icon);
-        JLabel username = new JLabel("username");
+        avatar = new JLabel();
+        username = new JLabel();
         username.setFont(new Font("Arial", Font.BOLD, 16));
         edit = new JButton("Edit");
         avatar.setAlignmentX(CENTER_ALIGNMENT);
@@ -46,6 +47,7 @@ public class LobbyMenuGUI extends JPanel{
         specialDice = new JRadioButton("Special Dice", false);
         
         challenge = new JButton("Challenge");
+        challenge.addActionListener(buttonListener);
         
         modeSelect.add(sixDice);
         modeSelect.add(specialDice);
@@ -69,12 +71,16 @@ public class LobbyMenuGUI extends JPanel{
         add(optionsLobbyPanel, BorderLayout.SOUTH);
     }
 
+    public void setPlayer(String username, ImageIcon icon){
+        avatar.setIcon(new ImageIcon(icon.getImage().getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH)));
+        this.username.setText(username);
+    }
+
     public void updateConnected(ArrayList<ConnectedUser> connected){
 
         currentUsersPanel.removeAll();
 
         for (ConnectedUser cu : connected){
-            System.out.print(cu.getUsername()+"\n");
             currentUsersPanel.add(cu);
         }
 

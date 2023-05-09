@@ -9,13 +9,18 @@ public class ConnectedUser extends JButton {
     int icon;
     int id;
     boolean hover;
+    ArrayList<ImageIcon> icons;
     
-    public ConnectedUser(String username, int icon, MouseListener mouseListener){
-        id = -1;
+    public ConnectedUser(int id, String username, int icon, MouseListener mouseListener){
+        this.id = id;
         this.username = username;
         this.icon = icon;
+        icons = new ArrayList<ImageIcon>();
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/sample.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/sample2.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+
         setText(username);
-        setIcon(new ImageIcon((new ImageIcon("./assets/icons/sample.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        setIcon(icons.get(icon));
        
         setHorizontalTextPosition(SwingConstants.CENTER);
         setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -28,8 +33,8 @@ public class ConnectedUser extends JButton {
         addMouseListener(mouseListener);
     }
 
-    public ConnectedUser(ConnectedUser cu){
-        
+    public int getId(){
+        return id;
     }
         
     public String getUsername(){

@@ -10,6 +10,7 @@ public class GameCanvas extends JComponent{
     public GameCanvas(int w, int h) {
         width = w;
         height = h;
+        setPreferredSize(new Dimension(w, h));
     }
 
     @Override
@@ -22,7 +23,7 @@ public class GameCanvas extends JComponent{
         );
         Rectangle2D.Double background = new Rectangle2D.Double(0,0,width,height);
         g2d.setRenderingHints(rh);
-        g2d.setPaint(Color.BLACK);
+        g2d.setPaint(Color.WHITE);
         g2d.fill(background);
     }
 }
