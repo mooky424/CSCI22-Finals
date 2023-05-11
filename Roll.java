@@ -1,32 +1,50 @@
-import javax.swing.*;
 import java.awt.*;
-import java.net.*;
-import java.io.*;
+import javax.swing.*;
+import java.awt.event.*;
+import java.awt.geom.*;
 import java.util.*;
 
-public class Player implements Sprite{
+public class Roll implements Sprite {
 
-    private int id;
-    private String username;
-    private ImageIcon icon;
+    private int x,y,width,height;
+    private int[][] clickableArea = {
+        {0,0},
+        {0,0}
+    };
+    private boolean hover;
 
-    private int x,y;
-
-    public Player(String username, ImageIcon icon){
-       this.username = username;
-       this.icon = icon;
-    }
-
-    public Player(int x, int y){
+    public Roll(int x, int y, int width, int height){
         this.x = x;
         this.y = y;
+        this.width = width;
+        this.height = height;
+        clickableArea[0][0] = x;
+        clickableArea[0][1] = x+width;
+        clickableArea[1][0] = y;
+        clickableArea[1][1] = y+width;
+        hover = false;
     }
 
     @Override
     public void draw(Graphics2D g2d) {
-        g2d.drawImage(icon.getImage(), x, y, null);
         g2d.setColor(Color.BLACK);
-        g2d.drawString(username, x + (icon.getIconWidth()-g2d.getFontMetrics().stringWidth(username)) / 2, y+20+icon.getIconHeight());
+        g2d.drawRoundRect(x, y, width, height, 5, 5);
+        g2d.drawString("Roll", x+20, y+20);
+    }
+
+    public void setHover(boolean hover){
+        this.hover = hover;
+    }
+
+    public boolean onClickableArea(int x, int y){
+        if ( x > clickableArea[0][0] && x < clickableArea[0][1] && y > clickableArea[1][0] && y < clickableArea[1][1]){
+            return true;
+        }
+        return false;
+    }
+
+    public void test(){        
+        System.out.println("You clicked on roll");
     }
 
     @Override
@@ -63,18 +81,5 @@ public class Player implements Sprite{
     public double getAngle() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getAngle'");
-    }
-
-    public void setDetails(String username, ImageIcon icon){
-        this.username = username;
-        this.icon = icon;
-    }
-
-    public String getUsername(){
-        return username;
-    }
-
-    public ImageIcon getIcon(){
-        return icon;
-    }
+    }    
 }

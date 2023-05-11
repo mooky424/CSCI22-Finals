@@ -88,11 +88,20 @@ import java.util.*;
                 sendToAll(response, id);
             }
             if (c[0].equals("challenge")){
-                System.out.println(command);
                 int challenger = id;
                 int challenged = Integer.parseInt(c[1]);
                 String challenge = "challenger " + challenger; 
                 send(challenge, challenged);
+            }
+            if (c[0].equals("roll")){
+                System.out.println(command);
+                int sender = id;
+                int receiver = Integer.parseInt(c[1]);
+                String message = "setdice " + sender + " ";
+                for ( int i = 2; i < c.length; i++){
+                    message += c[i] + " ";
+                }
+                send(message, receiver);
             }
             return response;
         }

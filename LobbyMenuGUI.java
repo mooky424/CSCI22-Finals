@@ -71,9 +71,9 @@ public class LobbyMenuGUI extends JPanel{
         add(optionsLobbyPanel, BorderLayout.SOUTH);
     }
 
-    public void setPlayer(String username, ImageIcon icon){
-        avatar.setIcon(new ImageIcon(icon.getImage().getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH)));
-        this.username.setText(username);
+    public void setPlayer(Player p){
+        avatar.setIcon(new ImageIcon(p.getIcon().getImage().getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH)));
+        this.username.setText(p.getUsername());
     }
 
     public void updateConnected(ArrayList<ConnectedUser> connected){

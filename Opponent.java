@@ -5,20 +5,25 @@ import java.awt.geom.*;
 public class Opponent implements Sprite {
     
     private String username;
-    private int id;
-    private int x, y;
+    private int id, x, y;
     private double angle;
-    private Image icon;
+    private ImageIcon icon;
 
-    public Opponent(String username, int icon){
-        angle = 0;
-        x = 0;
-        y = 0;
+    public Opponent(String username, ImageIcon icon, int id){
+       this.username = username;
+       this.icon = icon;
+       this.id = id;
+    }
+
+    public Opponent(int x, int y){
+        this.x = x;
+        this.y = y;
     }
 
     public void draw(Graphics2D g2d){
-        Image icon = new ImageIcon("./assets/icons/sample.png").getImage();
-        g2d.drawImage(icon, x, y, 150, 150, null);
+        g2d.drawImage(icon.getImage(), x, y, null);
+        g2d.setColor(Color.BLACK);
+        g2d.drawString(username, x + (icon.getIconWidth()-g2d.getFontMetrics().stringWidth(username)) / 2, y+20+icon.getIconHeight());
     }
 
     public void setID(int id){
@@ -52,5 +57,22 @@ public class Opponent implements Sprite {
 
     public void adjustAngle(double degree){
         angle += degree;
+    }
+
+    public void setDetails(String username, ImageIcon icon){
+        this.username = username;
+        this.icon = icon;
+    }
+
+    public String getUsername(){
+        return username;
+    }
+
+    public ImageIcon getIcon(){
+        return icon;
+    }
+
+    public int getId(){
+        return id;
     }
 }
