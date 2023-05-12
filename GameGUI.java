@@ -7,6 +7,7 @@ import java.util.*;
 public class GameGUI extends JPanel{
 
     GameCanvas gc;
+    GameRules gr;
     
     JPanel scoresheetPanel;
     JTable scoresheet;
@@ -44,7 +45,15 @@ public class GameGUI extends JPanel{
     }
 
     public void setPlayers(Player p, Opponent o){
+        gr = new GameRules();
         scoresheet.getTableHeader().getColumnModel().getColumn(1).setHeaderValue(p.getUsername());
         scoresheet.getTableHeader().getColumnModel().getColumn(2).setHeaderValue(o.getUsername());
+    }
+
+    public void setPossibleScores(int[] diceValues){
+        int[] possibleScores = gr.getPossibleScores(diceValues);
+        for ( int i = 0; i < possibleScores.length; i++){
+            scoresheet.setValueAt(Integer.toString(possibleScores[i]),i,1);
+        }
     }
 }

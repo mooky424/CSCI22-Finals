@@ -12,6 +12,7 @@ public class GameFrame {
     private MainMenuGUI mm;
     private CharacterSelectGUI cs;
     private LobbyMenuGUI lm;
+    private GameRules gr;
     private GameGUI g;
     private GameCanvas gc;
     
@@ -76,6 +77,7 @@ public class GameFrame {
     public void setupGameGUI(){
         cp.removeAll();
 
+        // gr = new GameRules(p, o);
         cp.add(g);
         g.add(gc, BorderLayout.CENTER);
 
@@ -102,11 +104,18 @@ public class GameFrame {
                 if (choice == JOptionPane.YES_OPTION){
                     System.out.println("Challenge Accepted");
                     o = new Opponent(challenger.getUsername(), (ImageIcon) challenger.getIcon(), challenger.getId());
+                    p.getUsername();
+                    p.getIcon();
+                    g.setPlayers(p, o);
                     gc.setPlayers(p, o);
                     setupGameGUI();
                 }
             }
-            
+            if (c[0].equals("setDice")){
+                if (o.getId() == Integer.parseInt(c[1])){
+
+                }
+            }            
         }
 
     public ConnectedUser findUser(int id){
@@ -215,7 +224,16 @@ public class GameFrame {
                     gc.rollDice();
 
                     String command = "roll " + o.getId(); // dice values (to) opponent with {values}
-                    ArrayList<Dice> dice = gc.getPlayerDice();
+                    ArrayList<Dice> dice = gc.getGameDice();
+                    int[] diceValues = {
+                        dice.get(0).getValue(),
+                        dice.get(1).getValue(),
+                        dice.get(2).getValue(),
+                        dice.get(3).getValue(),
+                        dice.get(4).getValue(),
+                        dice.get(5).getValue()
+                    };
+                    g.setPossibleScores(diceValues);
                     for (Dice d : dice) {
                         command += " " + d.getValue();
                     }
@@ -229,7 +247,7 @@ public class GameFrame {
                     Dice d = (Dice) obj;
                     totalKept += d.click(totalKept);
                     System.out.println("Total kept: " + totalKept);
-                    moveDice(gc.getPlayerDice());
+                    moveDice(gc.getGameDice());
                 }
             }
             gc.repaint();

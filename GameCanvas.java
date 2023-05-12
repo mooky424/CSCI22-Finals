@@ -10,7 +10,7 @@ public class GameCanvas extends JComponent{
     private Player p; //dummy for graphics
     private Opponent o; //dummy for graphics
     
-    private ArrayList<Dice> playerDice;
+    private ArrayList<Dice> gameDice;
     private Roll r;
 
     public GameCanvas(int w, int h) {
@@ -21,9 +21,9 @@ public class GameCanvas extends JComponent{
         p = new Player(300,400);
         o = new Opponent(500,400);
 
-        playerDice = new ArrayList<Dice>();        
+        gameDice = new ArrayList<Dice>();        
         for( int i = 0; i < 6; i++){
-            playerDice.add(new Dice(100+(60*i),10,50,50));
+            gameDice.add(new Dice(100+(60*i),10,50,50));
         }
         r = new Roll(10,200,100,100);
     }
@@ -45,8 +45,8 @@ public class GameCanvas extends JComponent{
         o.draw(g2d);
 
         r.draw(g2d);
-        for (int i = 0; i < playerDice.size(); i++){
-            playerDice.get(i).draw(g2d);
+        for (int i = 0; i < gameDice.size(); i++){
+            gameDice.get(i).draw(g2d);
         }
     }
 
@@ -54,7 +54,7 @@ public class GameCanvas extends JComponent{
         if (r.onClickableArea(x, y)){
             return r; 
         } 
-        for (Dice d : playerDice) {
+        for (Dice d : gameDice) {
             if (d.onClickableArea(x, y)){
                 return d;
             }
@@ -63,7 +63,7 @@ public class GameCanvas extends JComponent{
     }
 
     public void rollDice(){
-        for (Dice d : playerDice) {
+        for (Dice d : gameDice) {
             d.roll();
         }
     }
@@ -72,11 +72,12 @@ public class GameCanvas extends JComponent{
         return r;
     }
 
-    public ArrayList<Dice> getPlayerDice(){
-        return playerDice;
+    public ArrayList<Dice> getGameDice(){
+        return gameDice;
     }
 
     public void setPlayers(Player p, Opponent o){
+        System.out.println("Setting up canvas players");
         this.p.setDetails(p.getUsername(), (ImageIcon) p.getIcon());
         this.o.setDetails(o.getUsername(), (ImageIcon) p.getIcon());
     }
