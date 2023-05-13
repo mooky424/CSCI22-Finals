@@ -13,7 +13,10 @@ public class LobbyMenuGUI extends JPanel{
     protected JRadioButton sixDice, specialDice;
     protected ArrayList<JButton> currentUsers = new ArrayList<JButton>();
 
-    LobbyMenuGUI(ActionListener buttonListener){
+    LobbyMenuGUI(int w, int h, ActionListener buttonListener){
+        
+        setBounds(0,0,w-16,h-40);
+
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
@@ -21,7 +24,7 @@ public class LobbyMenuGUI extends JPanel{
         currentUsersPanel.setBackground(Color.WHITE);
         
         JPanel optionsLobbyPanel = new JPanel(new GridLayout(1,3));
-        optionsLobbyPanel.setPreferredSize(new Dimension(200, 200));
+        optionsLobbyPanel.setPreferredSize(new Dimension(0, 200));
         optionsLobbyPanel.setBorder(BorderFactory.createEmptyBorder(10,0,0,0));
         
         JPanel editAvatarPanel = new JPanel();
@@ -40,7 +43,6 @@ public class LobbyMenuGUI extends JPanel{
         avatar.setAlignmentX(CENTER_ALIGNMENT);
         username.setAlignmentX(CENTER_ALIGNMENT);
         edit.setAlignmentX(CENTER_ALIGNMENT);
-        
 
         ButtonGroup modeSelect = new ButtonGroup();
         sixDice = new JRadioButton("Six Dice", true);
@@ -87,4 +89,10 @@ public class LobbyMenuGUI extends JPanel{
         revalidate();
         repaint();
     }
+
+    public void setClickable(boolean state){
+        edit.setEnabled(state);
+        challenge.setEnabled(state);
+    }
+
 }

@@ -75,35 +75,39 @@ import java.util.*;
             }
         }
 
-        private String parseMessage(String command, int id){
+        private void parseMessage(String command, int id){
             String[] c = command.split(" ");
-            String response = "";
+            String msg = "";
             if (c[0].equals("create")){
-                System.out.println(c[0]+c[1]);
-                response = "addUser";
+                msg = "addUser";
                 username = c[1];
                 icon = c[2];
-                response = response + " " + id + " " + username + " " + icon; 
-                lobbyUserUpdates.add(response);
-                sendToAll(response, id);
+                msg = msg + " " + id + " " + username + " " + icon; 
+                lobbyUserUpdates.add(msg);
+                sendToAll(msg, id);
+                return;
             }
             if (c[0].equals("challenge")){
-                int challenger = id;
-                int challenged = Integer.parseInt(c[1]);
-                String challenge = "challenger " + challenger; 
-                send(challenge, challenged);
-            }
-            if (c[0].equals("roll")){
                 System.out.println(command);
                 int sender = id;
                 int receiver = Integer.parseInt(c[1]);
-                String message = "setdice " + sender + " ";
-                for ( int i = 2; i < c.length; i++){
-                    message += c[i] + " ";
-                }
-                send(message, receiver);
+                msg = "challenger " + sender; 
+                send(msg, receiver);
             }
-            return response;
+            if (c[0].equals("roll")){
+                int sender = id;
+                int receiver = Integer.parseInt(c[1]);
+                msg = "setdice " + sender + " ";
+                for ( int i = 2; i < c.length; i++){
+                    msg += c[i] + " ";
+                }
+                send(msg, receiver);
+            }
+            if (c[0].equals("accept")){
+                int receiver = Integer.parseInt(c[1]);
+                msg = "accepted";
+                send(msg, receiver);
+            }
         }
 
         private void updateUser(){

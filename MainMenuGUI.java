@@ -6,8 +6,10 @@ public class MainMenuGUI extends JPanel {
 
     protected JButton play, quit;
 
-    MainMenuGUI(ActionListener buttonListener){
+    MainMenuGUI(int w, int h, ActionListener buttonListener){
         
+        setBounds(0,0,w-16,h-40);
+
         setLayout(new GridLayout(1,3));
 
         JPanel optionsPanel = new JPanel(new GridLayout(3, 1));

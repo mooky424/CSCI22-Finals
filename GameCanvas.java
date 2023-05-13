@@ -14,6 +14,9 @@ public class GameCanvas extends JComponent{
     private Roll r;
 
     public GameCanvas(int w, int h) {
+
+        setBounds(0,0,w-16,h-40);
+
         width = w;
         height = h;
         setPreferredSize(new Dimension(w, h));

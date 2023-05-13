@@ -31,7 +31,9 @@ public class GameGUI extends JPanel{
         {"TOTAL SCORE", "", ""}
     };
 
-    public GameGUI(ActionListener buttonListener){
+    public GameGUI(int w, int h, ActionListener buttonListener){
+        
+        setBounds(0,0,w-16,h-40);
 
         setLayout(new BorderLayout());
         

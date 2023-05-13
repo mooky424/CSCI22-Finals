@@ -6,15 +6,20 @@ import java.net.*;
 import java.io.*;
 
 public class GameFrame {
+
+    private int w, h;
     
     private JFrame frame;
-    private Container cp;
+    private JLayeredPane lp;
     private MainMenuGUI mm;
     private CharacterSelectGUI cs;
     private LobbyMenuGUI lm;
+    private JPanel waiting;
     private GameRules gr;
     private GameGUI g;
     private GameCanvas gc;
+    
+    private boolean waitingforChallenge;
     
     private Socket s;
     private DataInputStream in;
@@ -26,14 +31,20 @@ public class GameFrame {
     private ArrayList<ConnectedUser> connected;
 
     public GameFrame(int w, int h) {
+        this.w = w;
+        this.h = h;
+
         frame = new JFrame();
         frame.setMinimumSize(new Dimension(w,h));
         frame.setMaximumSize(new Dimension(w,h));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //https://stackoverflow.com/questions/16532478/jframe-will-not-close-on-x
+        
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent we) {
                 try {
+                    System.out.println("Disconnecting from server.");
                     out.writeUTF("disconnect");
                     if(in.readUTF().equals("ok")){
                         s.close();
@@ -43,80 +54,170 @@ public class GameFrame {
                 }
             }
         });
-        cs = new CharacterSelectGUI(buttonListener);
-        mm = new MainMenuGUI(buttonListener);
-        lm = new LobbyMenuGUI(buttonListener);
-        g = new GameGUI(buttonListener);
+
+        lp = new JLayeredPane();
+        lp.setBounds(0, 0, w, h);
+
+        mm = new MainMenuGUI(w,h,buttonListener);
+        cs = new CharacterSelectGUI(w,h,buttonListener);
+        lm = new LobbyMenuGUI(w,h,buttonListener);
+        g = new GameGUI(w,h,buttonListener);
         gc = new GameCanvas(w, h);
         gc.addMouseListener(gameMouseListener);
-        cp = frame.getContentPane();
+        frame.getContentPane().add(lp);
+
+        waiting = new JPanel(){
+            @Override
+            protected void paintComponent(Graphics g) {
+
+                Graphics2D g2d = (Graphics2D) g;
+
+                RenderingHints rh = new RenderingHints(
+                    RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON
+                );
+                g2d.setRenderingHints(rh);
+                
+                String msg = "Waiting for response...";
+                g2d.setColor(new Color (0, 0, 0, 189));
+                g2d.fillRect(0, 0, w, h);
+                g2d.setColor(Color.WHITE);
+                g2d.setFont(new Font("Arial", Font.BOLD, 48));
+                g2d.drawString(msg, w/2 - g.getFontMetrics().stringWidth(msg)/2, h/2-24);
+                
+            };
+        };
+        waiting.setBounds(0,0,w,h);
+        waiting.setOpaque(false);
 
         connected = new ArrayList<ConnectedUser>();
     }
 
     public void setupMainMenu(){
-        cp.add(mm);
-        frame.pack();
+        lp.add(mm);
         frame.setVisible(true);
     }
 
     public void setupCharSelect(){
-        cp.removeAll();
-        cp.add(cs);
-        cp.revalidate();
-        cp.repaint();
+        lp.removeAll();
+        lp.add(cs, JLayeredPane.DEFAULT_LAYER);
     }
 
     public void setupLobbyGUI(){
-        cp.removeAll();
-        cp.add(lm);
-        cp.revalidate();
-        cp.repaint();
+        isLobbyEnabled = true;
+        lm.setClickable(true);
+        lp.removeAll();
+        lp.add(lm, JLayeredPane.DEFAULT_LAYER);
+    }
+
+    public void setWaitingPopup(){
+        isLobbyEnabled = false;
+        lm.setClickable(false);
+        lp.add(waiting, JLayeredPane.POPUP_LAYER);
     }
 
     public void setupGameGUI(){
-        cp.removeAll();
-
+        if (lp.getComponentCountInLayer(JLayeredPane.POPUP_LAYER) > 0){
+            lp.remove(waiting);
+        }
+        lp.removeAll();
         // gr = new GameRules(p, o);
-        cp.add(g);
+        lp.add(g, JLayeredPane.DEFAULT_LAYER);
         g.add(gc, BorderLayout.CENTER);
-
-        cp.revalidate();
-        cp.repaint();
     }
     
+    
+    ActionListener buttonListener = new ActionListener(){
+
+        @Override
+        public void actionPerformed(ActionEvent ae){
+            Object source = ae.getSource();
+            if (source == mm.play) {
+                try{
+                    System.out.print("Connecting to server... ");
+                    s = new Socket("localhost", 64820);
+                    in = new DataInputStream(s.getInputStream());
+                    out = new DataOutputStream(s.getOutputStream());
+                    setUpServerThread();
+                } catch (IOException ex) {
+                    System.out.println("Error");
+                } finally {
+                    setupCharSelect();
+                    System.out.println("Success");
+                }                
+            }
+            if (source == mm.quit){
+                frame.dispose();
+            }
+            if (source == cs.createUser){                
+                String username = cs.usernameField.getText();
+                int icon = cs.currentImage;
+                try {
+                    System.out.println("Creating User");
+                    out.writeUTF("create " + username + " " + Integer.toString(icon));
+                } catch (Exception e) {
+                    // TODO: handle exception
+                } finally {
+                    p = new Player(username, cs.icons.get((icon)));
+                    lm.setPlayer(p);
+                    setupLobbyGUI();
+                }
+            }
+            if (source == lm.challenge){
+                System.out.println("Challenging " + selected.getUsername());
+                try {
+                    out.writeUTF("challenge " + selected.getId());
+                } catch (Exception e) {
+                    // TODO: handle exception
+                } finally {
+                    setWaitingPopup();
+                    waitingforChallenge = true;
+                }
+            }
+        }
+    };
+
     private void parseMessage(String command){
-            String[] c = command.split(" ");
-            if (c[0].equals("addUser")){
-                int id = Integer.parseInt(c[1]);
-                String username = c[2];
-                int icon = Integer.parseInt(c[3]);
-                addUser(id,username,icon);
-            }
-            if (c[0].equals("delUser")){
-                int id = Integer.parseInt(c[1]);
-                removeUser(id);
-            }
-            if (c[0].equals("challenger")){
-                ConnectedUser challenger = findUser(Integer.parseInt(c[1]));
-                String message = "User " + challenger.getUsername() + " is challenging you.";
-                int choice = JOptionPane.showConfirmDialog(null, message, "User Challenge", JOptionPane.YES_NO_OPTION);
-                if (choice == JOptionPane.YES_OPTION){
-                    System.out.println("Challenge Accepted");
+        String[] c = command.split(" ");
+        if (c[0].equals("addUser")){
+            int id = Integer.parseInt(c[1]);
+            String username = c[2];
+            int icon = Integer.parseInt(c[3]);
+            addUser(id,username,icon);
+        }
+        if (c[0].equals("delUser")){
+            int id = Integer.parseInt(c[1]);
+            removeUser(id);
+        }
+        if (c[0].equals("challenger")){
+            ConnectedUser challenger = findUser(Integer.parseInt(c[1]));
+            String message = "User " + challenger.getUsername() + " is challenging you.";
+            int choice = JOptionPane.showConfirmDialog(null, message, "User Challenge", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION){
+                System.out.println("Challenge Accepted");
+                try {
+                    out.writeUTF("accept " + challenger.getId());
+                } catch (Exception e) {
+                    // TODO: handle exception
+                } finally {
                     o = new Opponent(challenger.getUsername(), (ImageIcon) challenger.getIcon(), challenger.getId());
-                    p.getUsername();
-                    p.getIcon();
                     g.setPlayers(p, o);
                     gc.setPlayers(p, o);
                     setupGameGUI();
                 }
             }
-            if (c[0].equals("setDice")){
-                if (o.getId() == Integer.parseInt(c[1])){
-
-                }
-            }            
         }
+        if (c[0].equals("accepted") && waitingforChallenge){
+            o = new Opponent(selected.getUsername(), (ImageIcon) selected.getIcon(), selected.getId());
+            g.setPlayers(p, o);
+            gc.setPlayers(p, o);
+            setupGameGUI();
+        }
+        if (c[0].equals("setDice")){
+            if (o.getId() == Integer.parseInt(c[1])){
+            }
+        }            
+    }
 
     public ConnectedUser findUser(int id){
         for (ConnectedUser cu : connected){
@@ -141,72 +242,38 @@ public class GameFrame {
         lm.updateConnected(connected);
     }
 
-    ActionListener buttonListener = new ActionListener(){
-        @Override
-        public void actionPerformed(ActionEvent ae){
-            Object source = ae.getSource();
-            if (source == mm.play) {
-                try{
-                    s = new Socket("localhost", 64820);
-                    in = new DataInputStream(s.getInputStream());
-                    out = new DataOutputStream(s.getOutputStream());
-                    setUpServerThread();
-                } catch (IOException ex) {
-                    System.out.println("Error connecting to server");
-                } finally {
-                    setupCharSelect();
-                }                
-            }
-            if (source == mm.quit){
-                frame.dispose();
-            }
-            if (source == cs.createUser){                
-                String username = cs.usernameField.getText();
-                int icon = cs.currentImage;
-                try {
-                    System.out.println("Creating User");
-                    out.writeUTF("create " + username + " " + Integer.toString(icon));
-                } catch (Exception e) {
-                    // TODO: handle exception
-                } finally {
-                    p = new Player(username, cs.icons.get((icon)));
-                    lm.setPlayer(p);
-                    setupLobbyGUI();
-                }
-            }
-            if (source == lm.challenge){
-                System.out.println("challenging");
-                try {
-                    out.writeUTF("challenge " + selected.getId());
-                } catch (Exception e) {
-                    // TODO: handle exception
-                }
-            }
-        }
-    };
-
+    boolean isLobbyEnabled = false;
     MouseListener lobbyMouseListener = new MouseAdapter() {
         ConnectedUser hovered;
         public void mouseEntered(MouseEvent me){
+            if(!isLobbyEnabled){
+                return;
+            }
             hovered = (ConnectedUser) me.getSource();
             hovered.setBorder(BorderFactory.createLineBorder(Color.RED, 5));
         }
         public void mouseExited(MouseEvent me){
+            if(!isLobbyEnabled){
+                return;
+            }
             if (hovered != selected)
                 hovered.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        }
+        public void mouseClicked(MouseEvent me){
+            if(!isLobbyEnabled){
+                return;
             }
-            public void mouseClicked(MouseEvent me){
-                if (selected != hovered){
-                    if (selected != null){
-                        selected.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-                    }
-                selected = (ConnectedUser) me.getSource();
-                selected.setBorder(BorderFactory.createLineBorder(Color.RED, 5));
-                
-                } else {
+            if (selected != hovered){
+                if (selected != null){
                     selected.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-                    selected = null;
                 }
+            selected = (ConnectedUser) me.getSource();
+            selected.setBorder(BorderFactory.createLineBorder(Color.RED, 5));
+            
+            } else {
+                selected.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+                selected = null;
+            }
         }
     };    
 
@@ -335,7 +402,6 @@ public class GameFrame {
         Thread serverUpdatesThread = new Thread("Server Updates"){
             public void run(){
                 try {
-                    System.out.println("ServerThread running");
                     while(true){
                         parseMessage(in.readUTF());                        
                     }
