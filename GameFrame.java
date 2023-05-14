@@ -36,7 +36,7 @@ public class GameFrame {
         frame = new JFrame();
         frame.setMinimumSize(new Dimension(w+16,h+40));
         frame.setMaximumSize(new Dimension(w+16,h+40));
-        frame.setResizable(false);
+        frame.setResizable(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //https://stackoverflow.com/questions/16532478/jframe-will-not-close-on-x
         
         frame.addWindowListener(new WindowAdapter() {
@@ -53,10 +53,11 @@ public class GameFrame {
                 }
             }
         });
-
+        
         lp = new JLayeredPane();
         lp.setBounds(0, 0, w+16, h+40);
-
+        System.out.println(lp.getLayout());
+        
         mm = new MainMenuGUI(w,h,buttonListener);
         cs = new CharacterSelectGUI(w,h,buttonListener);
         lm = new LobbyMenuGUI(w,h,buttonListener);
@@ -64,6 +65,12 @@ public class GameFrame {
         gc = new GameCanvas(w, h);
         gc.addMouseListener(gameMouseListener);
         frame.getContentPane().add(lp);
+        
+        JLabel background = new JLabel(new ImageIcon("./assets/background/black.png")); //zo lagay mo dito file path nung bg img
+        background.setBounds(0, 1, w, h);
+        background.setOpaque(false);
+        
+        lp.add(background, 0);
 
         waiting = new JPanel(){
             @Override
@@ -93,13 +100,13 @@ public class GameFrame {
     }
 
     public void setupMainMenu(){
-        lp.add(mm);
+        lp.add(mm, JLayeredPane.MODAL_LAYER);
         frame.setVisible(true);
     }
 
     public void setupCharSelect(){
         lp.removeAll();
-        lp.add(cs, JLayeredPane.DEFAULT_LAYER);
+        lp.add(cs, JLayeredPane.MODAL_LAYER);
     }
 
     public void setupLobbyGUI(){
@@ -110,7 +117,7 @@ public class GameFrame {
         isLobbyEnabled = true;
         lm.setClickable(true);
         lp.removeAll();
-        lp.add(lm, JLayeredPane.DEFAULT_LAYER);
+        lp.add(lm, JLayeredPane.MODAL_LAYER);
     }
 
     public void setWaitingPopup(){
@@ -125,7 +132,7 @@ public class GameFrame {
         }
         lp.removeAll();
         g.scoresheet.getSelectionModel().addListSelectionListener(scoreshseetListener);
-        lp.add(g, JLayeredPane.DEFAULT_LAYER);
+        lp.add(g, JLayeredPane.MODAL_LAYER);
         g.add(gc, BorderLayout.CENTER);
     }
     
