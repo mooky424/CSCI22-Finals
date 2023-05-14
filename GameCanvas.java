@@ -15,7 +15,7 @@ public class GameCanvas extends JComponent{
 
     public GameCanvas(int w, int h) {
 
-        setBounds(0,0,w-16,h-40);
+        setBounds(0,0,w,h);
 
         width = w;
         height = h;
@@ -77,6 +77,14 @@ public class GameCanvas extends JComponent{
 
     public ArrayList<Dice> getGameDice(){
         return gameDice;
+    }
+
+    public void setDice(int[] values){
+        for (int i = 0; i < gameDice.size(); i++){
+            System.out.println("setting dice " + gameDice.get(i).getValue() + " to " + values[i]);
+            gameDice.get(i).setValue(values[i]);
+        }
+        repaint();
     }
 
     public void setPlayers(Player p, Opponent o){

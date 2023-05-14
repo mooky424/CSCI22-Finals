@@ -15,7 +15,7 @@ public class LobbyMenuGUI extends JPanel{
 
     LobbyMenuGUI(int w, int h, ActionListener buttonListener){
         
-        setBounds(0,0,w-16,h-40);
+        setBounds(0,0,w,h);
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(10,10,10,10));

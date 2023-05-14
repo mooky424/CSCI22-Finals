@@ -1,8 +1,6 @@
 import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
-import javax.swing.Timer;
 
 public class Dice implements Sprite {
 
@@ -66,7 +64,7 @@ public class Dice implements Sprite {
 
     public void roll(){
         if (rollable) {
-            number = 1 + (int) (Math.random() * 5);
+            number = 1 + (int) (Math.random() * 6);
             rollPositionX = x;
             rollPositionY = y;
         }
@@ -90,6 +88,10 @@ public class Dice implements Sprite {
 
     public boolean isKept(){
         return (keptPosition == -1) ? false : true;
+    }
+
+    public void setValue(int value){
+        number = value;
     }
 
     public int getValue(){

@@ -31,6 +31,8 @@ import java.util.*;
         String username;
         String icon;
 
+        boolean turn;
+
         Socket s;
         Thread t;
         DataInputStream in;
@@ -81,10 +83,11 @@ import java.util.*;
             if (c[0].equals("create")){
                 msg = "addUser";
                 username = c[1];
-                icon = c[2];
+                int icon = Integer.parseInt(c[2]);
                 msg = msg + " " + id + " " + username + " " + icon; 
-                lobbyUserUpdates.add(msg);
+                createdUser(username, icon, id);
                 sendToAll(msg, id);
+                lobbyUserUpdates.add(msg);
                 return;
             }
             if (c[0].equals("challenge")){
@@ -93,21 +96,53 @@ import java.util.*;
                 int receiver = Integer.parseInt(c[1]);
                 msg = "challenger " + sender; 
                 send(msg, receiver);
-            }
-            if (c[0].equals("roll")){
-                int sender = id;
-                int receiver = Integer.parseInt(c[1]);
-                msg = "setdice " + sender + " ";
-                for ( int i = 2; i < c.length; i++){
-                    msg += c[i] + " ";
-                }
-                send(msg, receiver);
+                sendToAll("delUser " + sender, sender);
+                lobbyUserUpdates.add("delUser " + sender);
+                sendToAll("delUser " + receiver, receiver);
+                lobbyUserUpdates.add("delUser " + receiver);
             }
             if (c[0].equals("accept")){
                 int receiver = Integer.parseInt(c[1]);
                 msg = "accepted";
                 send(msg, receiver);
+
+                msg = "turn ";
+                if (Math.random() > 0.5){
+                    write("passedTurn");
+                    send("waitTurn", receiver);
+                } else {
+                    write("waitTurn");
+                    send("passedTurn",receiver);
+                }
             }
+            if (c[0].equals("decline")){
+                int receiver = Integer.parseInt(c[1]);
+                msg = "declined";
+                send(msg, receiver);
+            }
+            if (c[0].equals("passTurn")){
+                int passedTo = Integer.parseInt(c[1]);
+                if (passedTo == id){
+                    write("passedTurn");
+                    send("waitTurn", passedTo);
+                } else{
+                    write("waitTurn");
+                    send("passedTurn", passedTo);
+                }
+            }
+            if (c[0].equals("roll")){
+                int receiver = Integer.parseInt(c[1]);
+                msg = "setDice ";
+                for ( int i = 2; i < c.length; i++){
+                    msg += c[i] + " ";
+                }
+                send(msg, receiver);
+            }            
+        }
+
+        private void createdUser(String username, int icon, int id){
+            String msg = "createdUser " + username + " " + icon + " " + id;
+            write(msg);
         }
 
         private void updateUser(){

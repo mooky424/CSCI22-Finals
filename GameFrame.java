@@ -1,13 +1,14 @@
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import java.awt.event.*;
 import java.util.*;
 import java.net.*;
 import java.io.*;
 
 public class GameFrame {
-
-    private int w, h;
     
     private JFrame frame;
     private JLayeredPane lp;
@@ -19,7 +20,7 @@ public class GameFrame {
     private GameGUI g;
     private GameCanvas gc;
     
-    private boolean waitingforChallenge;
+    private boolean waitingforResponse;
     
     private Socket s;
     private DataInputStream in;
@@ -31,12 +32,10 @@ public class GameFrame {
     private ArrayList<ConnectedUser> connected;
 
     public GameFrame(int w, int h) {
-        this.w = w;
-        this.h = h;
 
         frame = new JFrame();
-        frame.setMinimumSize(new Dimension(w,h));
-        frame.setMaximumSize(new Dimension(w,h));
+        frame.setMinimumSize(new Dimension(w+16,h+40));
+        frame.setMaximumSize(new Dimension(w+16,h+40));
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //https://stackoverflow.com/questions/16532478/jframe-will-not-close-on-x
         
@@ -56,7 +55,7 @@ public class GameFrame {
         });
 
         lp = new JLayeredPane();
-        lp.setBounds(0, 0, w, h);
+        lp.setBounds(0, 0, w+16, h+40);
 
         mm = new MainMenuGUI(w,h,buttonListener);
         cs = new CharacterSelectGUI(w,h,buttonListener);
@@ -104,6 +103,10 @@ public class GameFrame {
     }
 
     public void setupLobbyGUI(){
+        if (lp.getComponentCountInLayer(JLayeredPane.POPUP_LAYER) > 0){
+            lp.remove(waiting);
+        }
+        lp.removeAll();
         isLobbyEnabled = true;
         lm.setClickable(true);
         lp.removeAll();
@@ -121,7 +124,7 @@ public class GameFrame {
             lp.remove(waiting);
         }
         lp.removeAll();
-        // gr = new GameRules(p, o);
+        g.scoresheet.getSelectionModel().addListSelectionListener(scoreshseetListener);
         lp.add(g, JLayeredPane.DEFAULT_LAYER);
         g.add(gc, BorderLayout.CENTER);
     }
@@ -136,8 +139,8 @@ public class GameFrame {
                 try{
                     System.out.print("Connecting to server... ");
                     s = new Socket("localhost", 64820);
-                    in = new DataInputStream(s.getInputStream());
                     out = new DataOutputStream(s.getOutputStream());
+                    in = new DataInputStream(s.getInputStream());
                     setUpServerThread();
                 } catch (IOException ex) {
                     System.out.println("Error");
@@ -152,33 +155,29 @@ public class GameFrame {
             if (source == cs.createUser){                
                 String username = cs.usernameField.getText();
                 int icon = cs.currentImage;
-                try {
-                    System.out.println("Creating User");
-                    out.writeUTF("create " + username + " " + Integer.toString(icon));
-                } catch (Exception e) {
-                    // TODO: handle exception
-                } finally {
-                    p = new Player(username, cs.icons.get((icon)));
-                    lm.setPlayer(p);
-                    setupLobbyGUI();
-                }
+                System.out.println("Creating User");
+                write("create " + username + " " + Integer.toString(icon));               
             }
             if (source == lm.challenge){
                 System.out.println("Challenging " + selected.getUsername());
-                try {
-                    out.writeUTF("challenge " + selected.getId());
-                } catch (Exception e) {
-                    // TODO: handle exception
-                } finally {
-                    setWaitingPopup();
-                    waitingforChallenge = true;
-                }
+                write("challenge " + selected.getId());
+                setWaitingPopup();
+                waitingforResponse = true;
             }
         }
-    };
+    };        
 
     private void parseMessage(String command){
+        System.out.println("Received: " + command);
         String[] c = command.split(" ");
+        if (c[0].equals("createdUser")){
+            String username = c[1];
+            int icon = Integer.parseInt(c[2]);
+            int id = Integer.parseInt(c[3]);
+            p = new Player(username, cs.icons.get(icon), id);
+            lm.setPlayer(p);
+            setupLobbyGUI();
+        } 
         if (c[0].equals("addUser")){
             int id = Integer.parseInt(c[1]);
             String username = c[2];
@@ -206,17 +205,51 @@ public class GameFrame {
                     setupGameGUI();
                 }
             }
+            if (choice == JOptionPane.NO_OPTION){
+                System.out.println("Challenge Declined");
+                try {
+                    out.writeUTF("decline " + challenger.getId());
+                    out.writeUTF("create " + p.getUsername() + " " + cs.icons.indexOf(p.getIcon()));
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }
+            }
         }
-        if (c[0].equals("accepted") && waitingforChallenge){
+        if (c[0].equals("accepted") && waitingforResponse){
             o = new Opponent(selected.getUsername(), (ImageIcon) selected.getIcon(), selected.getId());
             g.setPlayers(p, o);
             gc.setPlayers(p, o);
             setupGameGUI();
         }
-        if (c[0].equals("setDice")){
-            if (o.getId() == Integer.parseInt(c[1])){
+        if (c[0].equals("declined") && waitingforResponse){
+            try {
+                out.writeUTF("create " + p.getUsername() + " " + cs.icons.indexOf(p.getIcon()));
+            } catch (Exception e) {
+                // TODO: handle exception
+            } finally {
+                setupLobbyGUI();
             }
-        }            
+        }
+        if (c[0].equals("passedTurn")){
+            p.setTurn(true);
+            System.out.println("It's my turn");
+        }
+        if (c[0].equals("waitTurn")){
+            p.setTurn(false);
+            System.out.println("It's their turn");
+        }
+        if (c[0].equals("setDice")){
+            int[] diceValues = new int[6];
+            for (int i = 0; i < diceValues.length; i++){
+                diceValues[i] = Integer.parseInt(c[i+1]);
+                System.out.println(diceValues[i]);
+            }
+            gc.setDice(diceValues);
+        }
+
+        if (c[0].equals("")){
+            
+        }
     }
 
     public ConnectedUser findUser(int id){
@@ -288,6 +321,13 @@ public class GameFrame {
             Object obj = gc.getSprite(mouseX,mouseY);
             if (obj != null){
                 if (obj.getClass() == Roll.class){
+
+                    if(p.getRolls() == 0){
+                        return;
+                    } else {
+                        p.useRoll();
+                    }
+
                     gc.rollDice();
 
                     String command = "roll " + o.getId(); // dice values (to) opponent with {values}
@@ -304,11 +344,7 @@ public class GameFrame {
                     for (Dice d : dice) {
                         command += " " + d.getValue();
                     }
-                    try {
-                        out.writeUTF(command);
-                    } catch (IOException ex) {
-                        // TODO: handle exception
-                    }
+                    write(command);
                 }
                 if (obj.getClass() == Dice.class){
                     Dice d = (Dice) obj;
@@ -320,6 +356,20 @@ public class GameFrame {
             gc.repaint();
         }
         
+    };
+
+    ListSelectionListener scoreshseetListener = new ListSelectionListener() {
+        public void valueChanged(ListSelectionEvent le){
+            int selectedRow = g.scoresheet.getSelectedRow();
+            int selectedColumn = g.scoresheet.getSelectedColumn();
+
+            String selectedData = (String) g.scoresheet.getValueAt(selectedRow, selectedColumn);
+            System.out.println(selectedData);
+            if (selectedData != p.getScoresheet()[selectedRow]){
+                p.updateScoresheet(selectedRow, selectedData);
+                g.updatePlayerScore(p);
+            }
+        }
     };
 
     void moveDice(ArrayList<Dice> dice){
@@ -412,5 +462,14 @@ public class GameFrame {
         };
 
         serverUpdatesThread.start();
+    }
+
+    private void write(String msg){
+        System.out.println("Sending: " + msg);
+        try {
+            out.writeUTF(msg);
+        } catch (IOException ex) {
+            //TODO
+        }
     }
 }

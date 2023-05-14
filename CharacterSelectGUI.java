@@ -12,7 +12,7 @@ public class CharacterSelectGUI extends JPanel {
 
     CharacterSelectGUI(int w, int h, ActionListener buttonListener){
         
-        setBounds(0,0,w-16,h-40);
+        setBounds(0,0,w,h);
 
         icons = new ArrayList<ImageIcon>();
         icons.add(new ImageIcon((new ImageIcon("./assets/icons/sample.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
@@ -91,6 +91,10 @@ public class CharacterSelectGUI extends JPanel {
 
         prev.addActionListener(changeImage);
         next.addActionListener(changeImage);
+    }
+
+    public ImageIcon getIcon(int icon){
+        return icons.get(icon);
     }
 }
 

@@ -1,8 +1,4 @@
 import java.awt.*;
-import javax.swing.*;
-import java.awt.event.*;
-import java.awt.geom.*;
-import java.util.*;
 
 public class Roll implements Sprite {
 
@@ -11,7 +7,6 @@ public class Roll implements Sprite {
         {0,0},
         {0,0}
     };
-    private boolean hover;
 
     public Roll(int x, int y, int width, int height){
         this.x = x;
@@ -22,7 +17,6 @@ public class Roll implements Sprite {
         clickableArea[0][1] = x+width;
         clickableArea[1][0] = y;
         clickableArea[1][1] = y+width;
-        hover = false;
     }
 
     @Override
@@ -30,10 +24,6 @@ public class Roll implements Sprite {
         g2d.setColor(Color.BLACK);
         g2d.drawRoundRect(x, y, width, height, 5, 5);
         g2d.drawString("Roll", x+20, y+20);
-    }
-
-    public void setHover(boolean hover){
-        this.hover = hover;
     }
 
     public boolean onClickableArea(int x, int y){
