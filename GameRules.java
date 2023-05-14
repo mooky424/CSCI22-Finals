@@ -1,7 +1,14 @@
+/**
+	class desc w a min of two sentences
+	
+	@author Gabriel L. Salvador (225593)
+	@version May ?, 2023
+**/
+
 import java.util.*;
 
 public class GameRules {
-    
+
     int rollsLeft;
     Player p;
     Opponent o;
@@ -161,4 +168,5 @@ public class GameRules {
 
         return (pair && triplet) ? 25 : 0;
     }
+    
 }
