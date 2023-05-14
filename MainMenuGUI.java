@@ -7,7 +7,6 @@ public class MainMenuGUI extends JPanel {
     protected JButton play, quit;
 
     MainMenuGUI(int w, int h, ActionListener buttonListener){
-        
         setBounds(0,0,w,h);
         setOpaque(false);
 
@@ -29,13 +28,10 @@ public class MainMenuGUI extends JPanel {
         add(play);
         add(Box.createRigidArea(new Dimension(0, 10)));
         add(quit);
-        add(Box.createVerticalStrut(156));
+        add(Box.createVerticalStrut(250));
 
         play.addActionListener(buttonListener);
         quit.addActionListener(buttonListener);
     }
+
 }
-
-
-
-
