@@ -43,7 +43,8 @@ public class GameFrame {
         frame = new JFrame();
         frame.setMinimumSize(new Dimension(w+16,h+40));
         frame.setMaximumSize(new Dimension(w+16,h+40));
-        frame.setResizable(true);
+        frame.setLocationRelativeTo(null);
+        frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //https://stackoverflow.com/questions/16532478/jframe-will-not-close-on-x
         
         frame.addWindowListener(new WindowAdapter() {
@@ -63,12 +64,11 @@ public class GameFrame {
         
         lp = new JLayeredPane();
         lp.setBounds(0, 0, w+16, h+40);
-        System.out.println(lp.getLayout());
         
         mm = new MainMenuGUI(w,h,buttonListener);
         cs = new CharacterSelectGUI(w,h,buttonListener);
         lm = new LobbyMenuGUI(w,h,buttonListener);
-        g = new GameGUI(w,h,buttonListener);
+        g = new GameGUI(w,h,scoreshseetListener);
         gc = new GameCanvas(w, h);
         gc.addMouseListener(gameMouseListener);
         frame.getContentPane().add(lp);
@@ -138,7 +138,6 @@ public class GameFrame {
             lp.remove(waiting);
         }
         lp.removeAll();
-        g.scoresheet.getSelectionModel().addListSelectionListener(scoreshseetListener);
         lp.add(g, JLayeredPane.MODAL_LAYER);
         g.add(gc, BorderLayout.CENTER);
     }
@@ -255,7 +254,6 @@ public class GameFrame {
             int[] diceValues = new int[6];
             for (int i = 0; i < diceValues.length; i++){
                 diceValues[i] = Integer.parseInt(c[i+1]);
-                System.out.println(diceValues[i]);
             }
             gc.setDice(diceValues);
         }
@@ -345,8 +343,8 @@ public class GameFrame {
 
                     gc.rollDice();
 
-                    String command = "roll " + o.getId(); // dice values (to) opponent with {values}
                     ArrayList<Dice> dice = gc.getGameDice();
+
                     int[] diceValues = {
                         dice.get(0).getValue(),
                         dice.get(1).getValue(),
@@ -356,6 +354,9 @@ public class GameFrame {
                         dice.get(5).getValue()
                     };
                     g.setPossibleScores(diceValues);
+
+                    //send opponent dice values
+                    String command = "roll " + o.getId(); // dice values (to) opponent with {values}
                     for (Dice d : dice) {
                         command += " " + d.getValue();
                     }
@@ -365,7 +366,7 @@ public class GameFrame {
                     Dice d = (Dice) obj;
                     totalKept += d.click(totalKept);
                     System.out.println("Total kept: " + totalKept);
-                    moveDice(gc.getGameDice());
+                    gc.moveDiceToKeptPosition(gc.getGameDice());
                 }
             }
             gc.repaint();
@@ -386,82 +387,6 @@ public class GameFrame {
         }
     };
 
-    void moveDice(ArrayList<Dice> dice){
-        int arrangeDice = 0; 
-        for (Dice d : dice){
-            if (d.isKept()){
-                if (d.getKeptPosition() == arrangeDice){
-                    arrangeDice++;
-                } else if (d.getKeptPosition() != arrangeDice){
-                    d.setKeptPosition(arrangeDice++);
-                }                
-            }
-            
-            double endX = (d.getKeptPosition() >=0) ? 200 + 60*(d.getKeptPosition()+1) : d.getRollPositionX();
-            double endY = (d.getKeptPosition() >=0) ? 300 : d.getRollPositionY();
-
-            int duration = 300; //Animation duration in ms
-            int delay = 15;
-            
-            double x = d.getX();
-            double distanceX = endX - x;
-            double speedX = Math.abs(distanceX)/(duration/delay);
-            double directionX = (distanceX < 0) ? -1 : 1;
-            double velocityX = speedX * directionX;
-            
-            double y = d.getY();
-            double distanceY = endY - y;                
-            double speedY = Math.abs(distanceY)/(duration/delay);
-            double directionY = (distanceY < 0) ? -1 : 1;
-            double velocityY = speedY * directionY;
-
-            Thread animationX = new Thread() {
-                double distanceX = endX - d.getX();
-
-                public void run(){
-                    while(Math.abs(distanceX) > 10){
-                        gc.repaint();
-                        if (distanceX > 5 || distanceX < -5)
-                        d.adjustX(velocityX);
-                        try {
-                            sleep(delay);
-                        } catch (InterruptedException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                        distanceX = endX - d.getX();   
-                    }
-                    d.setX(endX);
-                    gc.repaint();
-                    this.interrupt();
-                }
-            };
-            Thread animationY = new Thread() {
-                double distanceY = endY - d.getY();
-
-                public void run(){
-                    while(Math.abs(distanceY) > 10){
-                        gc.repaint();
-                        if (distanceY > 5 || distanceY < -5)
-                            d.adjustY(velocityY);
-                        try {
-                            sleep(delay);
-                        } catch (InterruptedException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                        distanceY = endY - d.getY();                  
-                    }
-                    d.setY(endY);
-                    gc.repaint();
-                    this.interrupt();
-                }
-            };
-            animationX.start();
-            animationY.start();
-        }
-    }
-    
     private void setUpServerThread(){
         Thread serverUpdatesThread = new Thread("Server Updates"){
             public void run(){

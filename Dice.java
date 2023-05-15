@@ -26,12 +26,14 @@ public class Dice implements Sprite {
 
         this.x = x;
         this.y = y;
+        rollPositionX = x;
+        rollPositionY = y;
         this.width = width;
         this.height = height;
         clickableArea[0][0] = x;
         clickableArea[0][1] = x+width;
         clickableArea[1][0] = y;
-        clickableArea[1][1] = y+width;
+        clickableArea[1][1] = y+height;
         
         diceImages = new ArrayList<Image>();
         diceImages.add(new ImageIcon("./assets/dice/1.png").getImage());
@@ -73,8 +75,6 @@ public class Dice implements Sprite {
     public void roll(){
         if (rollable) {
             number = 1 + (int) (Math.random() * 6);
-            rollPositionX = x;
-            rollPositionY = y;
         }
     }
 
@@ -84,6 +84,11 @@ public class Dice implements Sprite {
 
     public void setKeptPosition(int position){
         keptPosition = position;
+    }
+
+    public void setRollPosition(double x, double y){
+        rollPositionX = x;
+        rollPositionY = y;
     }
 
     public double getRollPositionX(){
@@ -105,6 +110,10 @@ public class Dice implements Sprite {
     public int getValue(){
         return number;
     }
+
+    public double[][] getClickableArea(){
+        return clickableArea;
+    }
     
     @Override
     public void draw(Graphics2D g2d) {
@@ -122,7 +131,7 @@ public class Dice implements Sprite {
     public void adjustY(double distance) {
         y+=distance;
         clickableArea[1][0] = y;
-        clickableArea[1][1] = y+width;
+        clickableArea[1][1] = y+height;
     }
 
     @Override

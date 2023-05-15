@@ -101,8 +101,6 @@ public class Player implements Sprite{
     @Override
     public void draw(Graphics2D g2d) {
         g2d.drawImage(icon.getImage(), x, y, null);
-        g2d.setColor(Color.BLACK);
-        g2d.drawString(username, x + (icon.getIconWidth()-g2d.getFontMetrics().stringWidth(username)) / 2, y+20+icon.getIconHeight());
     }
 
     @Override
