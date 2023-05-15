@@ -40,6 +40,12 @@ public class CharacterSelectGUI extends JPanel {
         icons.add(new ImageIcon((new ImageIcon("./assets/icons/16wendy.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
         icons.add(new ImageIcon((new ImageIcon("./assets/icons/17joy.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
         icons.add(new ImageIcon((new ImageIcon("./assets/icons/18yeri.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/19yujin.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/20gaeul.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/21liz.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/22wonyoung.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/23rei.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/24leeseo.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
 
         setLayout(new GridLayout(3,3));
 
