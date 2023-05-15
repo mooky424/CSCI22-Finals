@@ -143,6 +143,11 @@ import java.util.*;
                 }
                 send(msg, receiver);
             }
+            if (c[0].equals("keptDice")){
+                int receiver = Integer.parseInt(c[1]);
+                msg = "keptDice " + c[2] + " " + c[3];
+                send(msg, receiver);
+            }
             if (c[0].equals("setScore")){
                 int receiver = Integer.parseInt(c[1]);
                 int selectedRow = Integer.parseInt(c[2]);

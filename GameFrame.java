@@ -244,10 +244,14 @@ public class GameFrame {
         }
         if (c[0].equals("passedTurn")){
             p.setTurn(true);
+            gc.setDialogue(1);
+            isGameEnabled = true;
             System.out.println("It's my turn");
         }
         if (c[0].equals("waitTurn")){
             p.setTurn(false);
+            gc.setDialogue(0);
+            isGameEnabled = false;
             System.out.println("It's their turn");
         }
         if (c[0].equals("setDice")){
@@ -257,8 +261,13 @@ public class GameFrame {
             }
             gc.setDice(diceValues);
         }
+        if (c[0].equals("keptDice")){
+            gc.opponentKeptDice(Integer.parseInt(c[1]), Integer.parseInt(c[2]));
+            gc.moveDiceToKeptOpponentPosition(gc.getGameDice());
+        }
         if (c[0].equals("setScore")){
-            
+            o.updateScoresheet(Integer.parseInt(c[2]),c[3]);
+            g.updateOpponentScore(o);
         }
         if (c[0].equals("")){
             
@@ -323,12 +332,16 @@ public class GameFrame {
         }
     };    
 
+    boolean isGameEnabled = true;
     MouseListener gameMouseListener = new MouseAdapter() {
         int totalKept = 0;
         int mouseX = 0;
         int mouseY = 0;
         @Override
         public void mouseClicked(MouseEvent me) {
+            if (!isGameEnabled){
+                return;
+            }
             mouseX = me.getX();
             mouseY = me.getY();
             Object obj = gc.getSprite(mouseX,mouseY);
@@ -339,6 +352,7 @@ public class GameFrame {
                         return;
                     } else {
                         p.useRoll();
+                        gc.setDialogue(4 - p.getRolls());
                     }
 
                     gc.rollDice();
@@ -363,10 +377,11 @@ public class GameFrame {
                     write(command);
                 }
                 if (obj.getClass() == Dice.class){
+
                     Dice d = (Dice) obj;
                     totalKept += d.click(totalKept);
-                    System.out.println("Total kept: " + totalKept);
-                    gc.moveDiceToKeptPosition(gc.getGameDice());
+                    gc.moveDiceToKeptPlayerPosition(gc.getGameDice());
+                    write("keptDice " + o.getId() + " " + gc.findDice(d) + " " + d.getKeptPosition());
                 }
             }
             gc.repaint();
@@ -383,6 +398,10 @@ public class GameFrame {
                 p.updateScoresheet(selectedRow, selectedData);
                 g.updatePlayerScore(p);
                 write("setScore " + o.getId() + " " + selectedRow + " " + selectedData);
+                if (p.getTurn()){
+                    write("passTurn " + o.getId());
+                    gc.setDialogue(0);
+                }
             }
         }
     };
