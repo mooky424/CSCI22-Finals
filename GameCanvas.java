@@ -5,14 +5,18 @@
 	@version May ?, 2023
 **/
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
+import java.io.*;
 import java.util.*;
 
 public class GameCanvas extends JComponent{
 
     private double width, height;
+    private File backgroundFile = new File("./assets/background/YahtzieGameScreenBg.png");
+    private Image background;
 
     private Player p; //dummy for graphics
     private Opponent o; //dummy for graphics
@@ -23,25 +27,33 @@ public class GameCanvas extends JComponent{
         "Click the dice you want to keep. You have 1 roll left.",
         "Select your move by clicking a cell on the scoresheet."
     };
+    private RollArea ra;
     private ArrayList<Dice> gameDice;
     private Roll r;
-
+    
     public GameCanvas(int w, int h) {
-
-        setBounds(0,0,w,h);
-
+        
+        setBounds(0,1,w,h);
+        
         width = w;
         height = h;
         setPreferredSize(new Dimension(w, h));
+        
+        try {
+            background = ImageIO.read(backgroundFile);
+        } catch (IOException ex) {
+            System.out.println("Error loading background");
+        }
 
-        p = new Player(300,400);
-        o = new Opponent(500,400);
+        p = new Player(20,598);
+        o = new Opponent(592,27);
+        ra = new RollArea(20, 266, 697, 318);
+        r = new Roll(737,676,267,72);
 
         gameDice = new ArrayList<Dice>();        
         for( int i = 0; i < 6; i++){
-            gameDice.add(new Dice(100+(60*i),10,50,50));
+            gameDice.add(new Dice(61+(95*i),385,80,80));
         }
-        r = new Roll(10,200,100,100);
     }
 
     @Override
@@ -52,15 +64,16 @@ public class GameCanvas extends JComponent{
             RenderingHints.KEY_ANTIALIASING,
             RenderingHints.VALUE_ANTIALIAS_ON
         );
-        Rectangle2D.Double background = new Rectangle2D.Double(0,0,width,height);
+
         g2d.setRenderingHints(rh);
-        g2d.setPaint(Color.WHITE);
-        g2d.fill(background);
+
+        g2d.drawImage(background, 0,1, null);
 
         p.draw(g2d);
         o.draw(g2d);
-
+        ra.draw(g2d);
         r.draw(g2d);
+
         for (int i = 0; i < gameDice.size(); i++){
             gameDice.get(i).draw(g2d);
         }
@@ -84,6 +97,26 @@ public class GameCanvas extends JComponent{
         }
     }
 
+    private boolean isDiceColliding(Dice dice){
+        double[][] diceArea = dice.getClickableArea();
+        /*
+         * [0][0] x
+         * [0][1] x+width
+         * [1][0] y
+         * [1][1] y+height
+         */
+        for (Dice d : gameDice){
+            double[][] dArea = dice.getClickableArea();
+            if (diceArea[0][0] >= dArea[0][1] ||
+                diceArea[0][1] <= dArea[0][0] ||
+                diceArea[1][0] >= dArea[1][1] ||
+                diceArea[1][1] <= dArea[1][0]){
+                    return false;
+            }
+        }
+        return true;
+    }
+
     public Roll getRoll(){
         return r;
     }
@@ -104,6 +137,82 @@ public class GameCanvas extends JComponent{
         System.out.println("Setting up canvas players");
         this.p.setDetails(p.getUsername(), (ImageIcon) p.getIcon());
         this.o.setDetails(o.getUsername(), (ImageIcon) p.getIcon());
+    }
+    
+    public void moveDiceToKeptPosition(ArrayList<Dice> dice){
+        int arrangeDice = 0; 
+        for (Dice d : dice){
+            if (d.isKept()){
+                if (d.getKeptPosition() == arrangeDice){
+                    arrangeDice++;
+                } else if (d.getKeptPosition() != arrangeDice){
+                    d.setKeptPosition(arrangeDice++);
+                }                
+            }
+            
+            double endX = (d.getKeptPosition() >=0) ? 162 + 95*(d.getKeptPosition()) : d.getRollPositionX();
+            double endY = (d.getKeptPosition() >=0) ? 630 : d.getRollPositionY();
+
+            int duration = 300; //Animation duration in ms
+            int delay = 15;
+            
+            double x = d.getX();
+            double distanceX = endX - x;
+            double speedX = Math.abs(distanceX)/(duration/delay);
+            double directionX = (distanceX < 0) ? -1 : 1;
+            double velocityX = speedX * directionX;
+            
+            double y = d.getY();
+            double distanceY = endY - y;                
+            double speedY = Math.abs(distanceY)/(duration/delay);
+            double directionY = (distanceY < 0) ? -1 : 1;
+            double velocityY = speedY * directionY;
+
+            Thread animationX = new Thread() {
+                double distanceX = endX - d.getX();
+
+                public void run(){
+                    while(Math.abs(distanceX) > 10){
+                        repaint();
+                        if (distanceX > 5 || distanceX < -5)
+                        d.adjustX(velocityX);
+                        try {
+                            sleep(delay);
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                        distanceX = endX - d.getX();   
+                    }
+                    d.setX(endX);
+                    repaint();
+                    this.interrupt();
+                }
+            };
+            Thread animationY = new Thread() {
+                double distanceY = endY - d.getY();
+
+                public void run(){
+                    while(Math.abs(distanceY) > 10){
+                        repaint();
+                        if (distanceY > 5 || distanceY < -5)
+                            d.adjustY(velocityY);
+                        try {
+                            sleep(delay);
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                        distanceY = endY - d.getY();                  
+                    }
+                    d.setY(endY);
+                    repaint();
+                    this.interrupt();
+                }
+            };
+            animationX.start();
+            animationY.start();
+        }
     }
 
 }

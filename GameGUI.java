@@ -7,6 +7,8 @@
 **/
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionListener;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -39,23 +41,33 @@ public class GameGUI extends JPanel{
     Player p;
     Opponent o;
 
-    public GameGUI(int w, int h, ActionListener buttonListener){
+    public GameGUI(int w, int h, ListSelectionListener scoreshseetListener){
         
         setBounds(0,0,w,h);
 
         setLayout(null);
         
         scoresheetPanel = new JPanel(new BorderLayout());
-        scoresheetPanel.setBounds(700,100,300,h);
+        scoresheetPanel.setBounds(737,20,267,646);
         scoresheetPanel.setOpaque(false);
 
         scoresheet = new JTable(dataSixDice, columnNames);
+
+        scoresheet.getTableHeader().setPreferredSize(new Dimension(0, 39));
+        scoresheet.getTableHeader().setFont(new Font("Sans Serif", Font.BOLD, 12));
+        scoresheet.setRowHeight(38);
+        scoresheet.getColumnModel().getColumn(0).setPreferredWidth(90);
+        scoresheet.setIntercellSpacing(new Dimension(10,10));
+        scoresheet.setFont(new Font("Sans Serif", Font.BOLD, 12));
+
         scoresheet.setCellSelectionEnabled(true);
         scoresheet.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        scoresheet.getSelectionModel().addListSelectionListener(scoreshseetListener);
 
         add(scoresheetPanel);
         scoresheetPanel.add(scoresheet.getTableHeader(), BorderLayout.NORTH);
         scoresheetPanel.add(scoresheet);
+
         gr = new GameRules();
     }
 
