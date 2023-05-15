@@ -94,7 +94,7 @@ public class GameGUI extends JPanel{
         gr = new GameRules();
 
         winnerPanel = new JPanel();
-        winnerPanel.setLayout(new BoxLayout(winnerPanel, BoxLayout.Y_AXIS));
+        winnerPanel.setLayout(new BoxLayout(winnerPanel, BoxLayout.PAGE_AXIS));
         winnerPanel.setOpaque(false);
         winnerPanel.setBounds(0,0,w,h);
 
