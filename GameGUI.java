@@ -24,16 +24,17 @@
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
-
 import java.awt.*;
-import java.awt.event.*;
 
 public class GameGUI extends JPanel{
+
+    int w,h;
 
     GameCanvas gc;
     GameRules gr;
     
     JPanel scoresheetPanel;
+    JPanel winnerPanel;
     JTable scoresheet;
     String[] columnNames = {"", "", ""};
     String[][] dataSixDice = { 
@@ -58,6 +59,9 @@ public class GameGUI extends JPanel{
     Opponent o;
 
     public GameGUI(int w, int h, ListSelectionListener scoreshseetListener){
+
+        this.w = w;
+        this.h = h;
         
         setBounds(0,0,w,h);
 
@@ -112,6 +116,24 @@ public class GameGUI extends JPanel{
                 scoresheet.setValueAt("",i,1);
             }
         }
+
+        if(scoresheet.getValueAt(15, 1) != "" && scoresheet.getValueAt(15, 2) != ""){
+            winnerPanel = new JPanel();
+            winnerPanel.setLayout(new BoxLayout(winnerPanel, BoxLayout.Y_AXIS));
+            winnerPanel.setOpaque(false);
+            winnerPanel.setBounds(0,0,w,h);
+            removeAll();
+            int playerScore = (int) scoresheet.getValueAt(15, 1);
+            int opponentScore = (int) scoresheet.getValueAt(15, 2);
+            JLabel winner = new JLabel(playerScore > opponentScore ? "You win!" : (o.getUsername() + " wins!"));
+            winner.setFont(new Font("Sans Serif", Font.BOLD, 36));
+
+            winnerPanel.add(Box.createVerticalGlue());
+            winnerPanel.add(winner);
+            winnerPanel.add(Box.createVerticalGlue());
+
+            add(winnerPanel);
+        }
     }
 
     public void updateOpponentScore(Opponent o){
@@ -123,6 +145,24 @@ public class GameGUI extends JPanel{
             } else {
                 scoresheet.setValueAt("",i,2);
             }
+        }
+
+        if(scoresheet.getValueAt(15, 1) != "" && scoresheet.getValueAt(15, 2) != ""){
+            winnerPanel = new JPanel();
+            winnerPanel.setLayout(new BoxLayout(winnerPanel, BoxLayout.Y_AXIS));
+            winnerPanel.setOpaque(isOpaque());
+            winnerPanel.setBounds(0,0,w,h);
+            removeAll();
+            int playerScore = (int) scoresheet.getValueAt(15, 1);
+            int opponentScore = (int) scoresheet.getValueAt(15, 2);
+            JLabel winner = new JLabel(playerScore > opponentScore ? "You win!" : (o.getUsername() + " wins!"));
+            winner.setFont(new Font("Sans Serif", Font.BOLD, 36));
+
+            winnerPanel.add(Box.createVerticalGlue());
+            winnerPanel.add(winner);
+            winnerPanel.add(Box.createVerticalGlue());
+
+            add(winnerPanel);
         }
     }
     
