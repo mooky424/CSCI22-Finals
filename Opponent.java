@@ -47,7 +47,6 @@ public class Opponent implements Sprite {
         "", //yahtzee
         "" //total
     };
-    private double angle;
     private ImageIcon icon;
 
     public Opponent(String username, ImageIcon icon, int id){
@@ -82,20 +81,12 @@ public class Opponent implements Sprite {
         return y;
     }
 
-    public double getAngle(){
-        return angle;
-    }
-
     public void adjustX(double distance){
         x += distance;
     }
 
     public void adjustY(double distance){
         y += distance;
-    }
-
-    public void adjustAngle(double degree){
-        angle += degree;
     }
 
     public void setDetails(String username, ImageIcon icon){

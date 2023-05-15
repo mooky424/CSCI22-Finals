@@ -153,12 +153,6 @@ public class Dice implements Sprite {
         clickableArea[1][1] = y+height;
     }
 
-    @Override
-    public void adjustAngle(double degree) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'adjustAngle'");
-    }
-
     public void setX(double xPos){
         x = (int) xPos;
         clickableArea[0][0] = x;
@@ -180,11 +174,4 @@ public class Dice implements Sprite {
     public double getY() {
         return y;
     }
-
-    @Override
-    public double getAngle() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAngle'");
-    }
-    
 }

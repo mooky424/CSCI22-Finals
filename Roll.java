@@ -64,38 +64,21 @@ public class Roll implements Sprite {
 
     @Override
     public void adjustX(double distance) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'adjustX'");
+        x += distance;
     }
 
     @Override
     public void adjustY(double distance) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'adjustY'");
-    }
-
-    @Override
-    public void adjustAngle(double degree) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'adjustAngle'");
+        y += distance;
     }
 
     @Override
     public double getX() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getX'");
+        return x;
     }
 
     @Override
     public double getY() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getY'");
+        return y;
     }
-
-    @Override
-    public double getAngle() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAngle'");
-    }    
-
 }

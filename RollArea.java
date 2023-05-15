@@ -46,8 +46,6 @@ public class RollArea implements Sprite{
     public void draw(Graphics2D g2d) {
         g2d.setColor(Color.WHITE);
         g2d.fillRoundRect(x, y, width, height, 16, 16);
-        g2d.setColor(Color.BLUE);
-        g2d.drawRect(rollableArea[0][0], rollableArea[1][0], width-20, height-20);
     }
 
     public boolean onRollableArea(int x, int y){
@@ -59,38 +57,21 @@ public class RollArea implements Sprite{
 
     @Override
     public void adjustX(double distance) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'adjustX'");
+        x += distance;
     }
 
     @Override
     public void adjustY(double distance) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'adjustY'");
-    }
-
-    @Override
-    public void adjustAngle(double degree) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'adjustAngle'");
+        y += distance;
     }
 
     @Override
     public double getX() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getX'");
+        return x;
     }
 
     @Override
     public double getY() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getY'");
+        return y;
     }
-
-    @Override
-    public double getAngle() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAngle'");
-    }
-    
 }
