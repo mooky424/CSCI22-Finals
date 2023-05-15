@@ -10,6 +10,12 @@ public class GameCanvas extends JComponent{
     private Player p; //dummy for graphics
     private Opponent o; //dummy for graphics
     
+    private String[] dialogue = {
+        "Click \"Roll\" to begin.",
+        "Click the dice you want to keep. You have 2 rolls left.",
+        "Click the dice you want to keep. You have 1 roll left.",
+        "Select your move by clicking a cell on the scoresheet."
+    };
     private ArrayList<Dice> gameDice;
     private Roll r;
 

@@ -29,10 +29,7 @@ import java.util.*;
 
         int id;
         String username;
-        String icon;
-
-        boolean turn;
-
+        
         Socket s;
         Thread t;
         DataInputStream in;
@@ -136,6 +133,13 @@ import java.util.*;
                 for ( int i = 2; i < c.length; i++){
                     msg += c[i] + " ";
                 }
+                send(msg, receiver);
+            }
+            if (c[0].equals("setScore")){
+                int receiver = Integer.parseInt(c[1]);
+                int selectedRow = Integer.parseInt(c[2]);
+                int score = Integer.parseInt(c[3]);
+                msg = "setScore " + id + " " + selectedRow + " " + score;
                 send(msg, receiver);
             }            
         }

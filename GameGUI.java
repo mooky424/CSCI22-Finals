@@ -35,16 +35,17 @@ public class GameGUI extends JPanel{
         
         setBounds(0,0,w,h);
 
-        setLayout(new BorderLayout());
+        setLayout(null);
         
         scoresheetPanel = new JPanel(new BorderLayout());
+        scoresheetPanel.setBounds(700,100,300,h);
+        scoresheetPanel.setOpaque(false);
+
         scoresheet = new JTable(dataSixDice, columnNames);
         scoresheet.setCellSelectionEnabled(true);
         scoresheet.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        scoresheet.getSelectedRow();
-
-        add(scoresheetPanel, BorderLayout.EAST);
+        add(scoresheetPanel);
         scoresheetPanel.add(scoresheet.getTableHeader(), BorderLayout.NORTH);
         scoresheetPanel.add(scoresheet);
         gr = new GameRules();

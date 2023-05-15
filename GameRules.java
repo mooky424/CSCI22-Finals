@@ -42,8 +42,6 @@ public class GameRules {
         int chance = 0;
         int yahtzee = 0;
         
-        boolean pair = false;
-        boolean triplet = false;
         int consecutive = 0;
 
         int[] valueInstances = {0, 0, 0, 0, 0, 0};

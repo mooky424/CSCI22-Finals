@@ -253,6 +253,9 @@ public class GameFrame {
             }
             gc.setDice(diceValues);
         }
+        if (c[0].equals("setScore")){
+            
+        }
 
         if (c[0].equals("")){
             
@@ -329,7 +332,7 @@ public class GameFrame {
             if (obj != null){
                 if (obj.getClass() == Roll.class){
 
-                    if(p.getRolls() == 0){
+                    if(!p.getTurn() || p.getRolls() == 0){
                         return;
                     } else {
                         p.useRoll();
@@ -371,10 +374,10 @@ public class GameFrame {
             int selectedColumn = g.scoresheet.getSelectedColumn();
 
             String selectedData = (String) g.scoresheet.getValueAt(selectedRow, selectedColumn);
-            System.out.println(selectedData);
             if (selectedData != p.getScoresheet()[selectedRow]){
                 p.updateScoresheet(selectedRow, selectedData);
                 g.updatePlayerScore(p);
+                write("setScore " + o.getId() + " " + selectedRow + " " + selectedData);
             }
         }
     };

@@ -61,6 +61,10 @@ public class Player implements Sprite{
         rollsLeft = 2;
     }
 
+    public boolean getTurn(){
+        return turn;
+    }
+
     public int getRolls(){
         return rollsLeft;
     }
