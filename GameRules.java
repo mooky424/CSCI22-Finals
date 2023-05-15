@@ -72,6 +72,7 @@ public class GameRules {
         //get instances of each dice vlaue
         for ( int i = 0; i < diceValues.length; i++){
             valueInstances[diceValues[i]-1] += 1;
+            System.out.println(valueInstances[diceValues[i]-1]);
         }
 
         //get singles values
@@ -82,12 +83,12 @@ public class GameRules {
         fives = (valueInstances[4] == 6) ? 5*5 :valueInstances[4]*5;
         sixes = (valueInstances[5] == 6) ? 5*6 :valueInstances[5]*6;      
         
-        threeOfAKind = getCombination(3, diceValues, valueInstances);
-        fourOfAKind = getCombination(4, diceValues, valueInstances);
-        fullHouse = getFullHouse(diceValues, valueInstances);
-        barbie = getBarbie(diceValues, valueInstances);
-        chance = getCombination(1, diceValues, valueInstances);
-        yahtzee = getCombination(5, diceValues, valueInstances);
+        threeOfAKind = getCombination(3, diceValues.clone(), valueInstances.clone());
+        fourOfAKind = getCombination(4, diceValues.clone(), valueInstances.clone());
+        fullHouse = getFullHouse(diceValues.clone(), valueInstances.clone());
+        barbie = getBarbie(diceValues.clone(), valueInstances.clone());
+        chance = getChance(diceValues.clone(), valueInstances.clone());
+        yahtzee = getYahtzee(diceValues.clone(), valueInstances.clone());
 
         for( int i = 0; i < valueInstances.length; i++){
             if (valueInstances[i] == 0){
@@ -119,10 +120,6 @@ public class GameRules {
         };
 
         return possibleScores;
-    }
-
-    public void setScore(int score, int combination){
-
     }
 
     public int getCombination(int combination, int[] values, int[] instances){
@@ -182,6 +179,37 @@ public class GameRules {
         }
 
         return (pair && triplet) ? 25 : 0;
+    }
+    
+    private int getChance(int[] values, int[] instances) {
+        Arrays.sort(values);
+        int score = 0;
+        for (int i = 0; i < 5; i++){
+            score += values[5-i];
+        }
+        return score;
+    }
+
+    private int getYahtzee(int[] values, int[] instances) {
+        Arrays.sort(values);
+        System.out.printf("%d %d %d %d %d %d\n", 
+                    values[0],
+                    values[1],
+                    values[2],
+                    values[3],
+                    values[4],
+                    values[5]);
+        int score = 0;
+
+        for (int i = 0; i < 6; i++){
+            System.out.println("Trying for Yahtzee " + instances[i]);
+            if (instances[i] >= 5){
+                System.out.println("Got a Yahtzee");
+                score = 50;
+                break;
+            }
+        }
+        return score;
     }
 
     public int getBarbie(int[] values, int[] instances){

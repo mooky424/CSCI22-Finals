@@ -170,6 +170,7 @@ public class GameFrame {
         @Override
         public void actionPerformed(ActionEvent ae){
             Object source = ae.getSource();
+            String feedback = "";
             if (source == mm.play) {
                 try{
                     System.out.print("Connecting to server... ");
@@ -178,10 +179,10 @@ public class GameFrame {
                     in = new DataInputStream(s.getInputStream());
                     setUpServerThread();
                 } catch (IOException ex) {
-                    System.out.println("Error");
+                    feedback = "Error";
                 } finally {
                     setupCharSelect();
-                    System.out.println("Success");
+                    System.out.println(feedback == "" ? "Success" : feedback);
                 }                
             }
             if (source == mm.quit){
@@ -419,6 +420,15 @@ public class GameFrame {
                         dice.get(4).getValue(),
                         dice.get(5).getValue()
                     };
+
+                    System.out.printf("%d %d %d %d %d %d\n", 
+                    dice.get(0).getValue(),
+                    dice.get(1).getValue(),
+                    dice.get(2).getValue(),
+                    dice.get(3).getValue(),
+                    dice.get(4).getValue(),
+                    dice.get(5).getValue());
+                    
                     g.setPossibleScores(diceValues);
 
                     //send opponent dice values

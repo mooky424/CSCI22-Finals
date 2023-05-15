@@ -99,7 +99,9 @@ public class GameGUI extends JPanel{
         winnerPanel.setBounds(0,0,w,h);
 
         backToLobby = new JButton("Back to Lobby");
+        backToLobby.setAlignmentX(CENTER_ALIGNMENT);
         exit = new JButton("Exit");        
+        exit.setAlignmentX(CENTER_ALIGNMENT);
     }
 
     public void setPlayers(Player p, Opponent o){
@@ -143,8 +145,13 @@ public class GameGUI extends JPanel{
 
     public void setWinner(ActionListener buttonListener){
         String playerScore = (String) scoresheet.getValueAt(15, 1);
-        String opponentScore = (String) scoresheet.getValueAt(15, 2);            
+        String opponentScore = (String) scoresheet.getValueAt(15, 2);    
+
         JLabel winner = new JLabel(Integer.parseInt(playerScore) > Integer.parseInt(opponentScore) ? "You win!" : (o.getUsername() + " wins!"));
+        winner.setFont(new Font("Sans Serif", Font.BOLD, 36));
+        winner.setAlignmentX(CENTER_ALIGNMENT);
+        
+        JLabel scores = new JLabel(playerScore + " : " + opponentScore);
         winner.setFont(new Font("Sans Serif", Font.BOLD, 36));
         winner.setAlignmentX(CENTER_ALIGNMENT);
         
