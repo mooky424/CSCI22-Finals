@@ -8,13 +8,11 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.*;
 import java.io.*;
 import java.util.*;
 
 public class GameCanvas extends JComponent{
 
-    private double width, height;
     private File backgroundFile = new File("./assets/background/YahtzieGameScreenBg.png");
     private Image background;
 
@@ -30,8 +28,6 @@ public class GameCanvas extends JComponent{
         
         setBounds(0,1,w,h);
         
-        width = w;
-        height = h;
         setPreferredSize(new Dimension(w, h));
         
         try {
