@@ -1,5 +1,7 @@
 /**
-	This class extends JButton and omg i have no words vibes lang
+	This class extends JButton. It displays the icon of a connected
+    user in a GUI. It has methods to retrieve the user's ID and username.
+    It also handles mouse events.
 	
 	@author Gabriel L. Salvador (225593)
     @author Janel Zherry A. Esmeris (222455)

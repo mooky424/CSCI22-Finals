@@ -1,5 +1,7 @@
 /**
-	class desc w a min of two sentences
+	This class implements the Sprite interface. It is responsible
+    for generating and displaying game directions and guides to the
+    player.
 	
 	@author Gabriel L. Salvador (225593)
     @author Janel Zherry A. Esmeris (222455)

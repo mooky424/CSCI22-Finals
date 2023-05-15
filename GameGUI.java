@@ -1,5 +1,7 @@
 /**
-	class desc w a min of two sentences
+	This class extends JPanel and is responsible for making a GUI
+    component in which the players play the game. It also creates
+    instances of the GameCanvas and GameRules classes.
 	
 	@author Gabriel L. Salvador (225593)
     @author Janel Zherry A. Esmeris (222455)

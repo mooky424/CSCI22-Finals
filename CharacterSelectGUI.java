@@ -1,8 +1,11 @@
 /**
-	This class extends JPanel and is responsible for making
-    the GUI in which the player can select their character.
-    It loads an array list of image icons and has a getter
-    method for its content.
+	This class extends JPanel and is responsible for making a GUI
+    in which the player can select their character. It populates
+    an array list of ImageIcon objects and has a method to retrieve
+    an object on the list based on the provided index. It also
+    displays available character icons, allows navigation between
+    icons using prev and next buttons, and provides text input for
+    the username.
 	
 	@author Gabriel L. Salvador (225593)
     @author Janel Zherry A. Esmeris (222455)

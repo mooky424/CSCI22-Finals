@@ -1,8 +1,7 @@
 /**
-	This class extends JPanel and is responsible for making
-    the GUI for the title screen of the game. It uses a
-    background image and two buttons that allow the player
-    to play and quit the game.
+	This class extends JPanel and is responsible for making a GUI for
+    the title screen of the game. It uses a background image and two
+    buttons that allow the player to play and quit the game.
 	
 	@author Gabriel L. Salvador (225593)
     @author Janel Zherry A. Esmeris (222455)

@@ -1,7 +1,6 @@
 /**
-	This interface is to help in drawing components
-	and adjusting their properties. It is implemented
-	by other classes.
+	This interface is to help in drawing and manipulating graphical
+	components. It is implemented by other classes.
 	
 	@author Gabriel L. Salvador (225593)
     @author Janel Zherry A. Esmeris (222455)

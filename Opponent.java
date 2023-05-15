@@ -1,5 +1,7 @@
 /**
-	class desc w a min of two sentences
+	This class implements the Sprite interface. It represents an opponent
+    in the game and contains information about them. It also has getter
+    methods to access their details.
 	
 	@author Gabriel L. Salvador (225593)
     @author Janel Zherry A. Esmeris (222455)

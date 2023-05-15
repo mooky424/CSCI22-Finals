@@ -1,5 +1,6 @@
 /**
-	class desc w a min of two sentences
+	This class represents and implements the rules and logic of the game.
+    It has methods to calculate scores for different combinations.
 	
 	@author Gabriel L. Salvador (225593)
     @author Janel Zherry A. Esmeris (222455)

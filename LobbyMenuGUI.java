@@ -1,8 +1,7 @@
 /**
-	This class extends JPanel and is responsible for making
-    the GUI in which the player can see all the other connected
-    players. This also allows the player to send and receive
-    game challenges.
+	This class extends JPanel and is responsible for making a GUI for
+    the game's lobby menu. It displays the avatars of connected users.
+    This also allows the player to send and receive game challenges.
 	
 	@author Gabriel L. Salvador (225593)
     @author Janel Zherry A. Esmeris (222455)
