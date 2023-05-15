@@ -259,13 +259,9 @@ public class GameFrame {
             }
             gc.setDice(diceValues);
         }
-<<<<<<< HEAD
         if (c[0].equals("setScore")){
             
         }
-
-=======
->>>>>>> 7902b7e979393ac5d9e3f2292fee5f06d0dc675c
         if (c[0].equals("")){
             
         }
