@@ -1,5 +1,6 @@
 /**
-	class desc w a min of two sentences
+	This class extends JComponent and overrides the paintComponent method
+    to draw the game components. isa pa ulet sentence
 	
 	@author Gabriel L. Salvador (225593)
     @author Janel Zherry A. Esmeris (222455)

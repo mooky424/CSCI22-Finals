@@ -1,5 +1,6 @@
 /**
-	class desc w a min of two sentences
+	This class starts the game from the player's side. hahahah isa
+    pang sentence lods
 	
 	@author Gabriel L. Salvador (225593)
     @author Janel Zherry A. Esmeris (222455)
