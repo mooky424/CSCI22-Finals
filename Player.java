@@ -80,7 +80,7 @@ public class Player implements Sprite{
 
     public void setTurn(boolean turn){
         this.turn = turn;
-        rollsLeft = 2;
+        rollsLeft = 3;
     }
 
     public boolean getTurn(){

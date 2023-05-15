@@ -84,6 +84,7 @@ public class GameRules {
         threeOfAKind = getCombination(3, diceValues, valueInstances);
         fourOfAKind = getCombination(4, diceValues, valueInstances);
         fullHouse = getFullHouse(diceValues, valueInstances);
+        barbie = getBarbie(diceValues, valueInstances);
         chance = getCombination(1, diceValues, valueInstances);
         yahtzee = getCombination(5, diceValues, valueInstances);
 
@@ -180,6 +181,15 @@ public class GameRules {
         }
 
         return (pair && triplet) ? 25 : 0;
+    }
+
+    public int getBarbie(int[] values, int[] instances){
+        
+        Arrays.sort(values);
+        boolean threes = instances[2] == 5 ? true : false;
+        boolean five = instances[4] == 1 ? true : false;
+
+        return (threes && five) ? 64 : 0;
     }
     
 }

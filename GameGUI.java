@@ -111,5 +111,17 @@ public class GameGUI extends JPanel{
             }
         }
     }
+
+    public void updateOpponentScore(Opponent o){
+        System.out.println("Updating Opponent Score");
+        String[] scores = o.getScoresheet();
+        for ( int i = 0; i < scores.length; i++){
+            if (scores[i] != ""){
+                scoresheet.setValueAt(scores[i],i,2);
+            } else {
+                scoresheet.setValueAt("",i,2);
+            }
+        }
+    }
     
 }

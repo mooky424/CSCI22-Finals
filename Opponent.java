@@ -27,6 +27,24 @@ public class Opponent implements Sprite {
     
     private String username;
     private int id, x, y;
+    private String[] scoresheet = {
+        "", //ones
+        "", //twos
+        "", //threes
+        "", //fours
+        "", //fives
+        "", //sixes
+        "", //sum
+        "", //three of a kind
+        "", //four of a kind
+        "", //full house
+        "", //small straihgt
+        "", //large straight
+        "", //barbie
+        "", //chance
+        "", //yahtzee
+        "" //total
+    };
     private double angle;
     private ImageIcon icon;
 
@@ -81,6 +99,24 @@ public class Opponent implements Sprite {
     public void setDetails(String username, ImageIcon icon){
         this.username = username;
         this.icon = icon;
+    }
+
+    public void updateScoresheet(int row, String score){
+        scoresheet[row] = score;
+        int sum = 0;
+        for (int i = 0 ; i < 6; i++){
+            if (scoresheet[i] == ""){
+                sum = 0;
+                break;
+            } else {
+                sum += Integer.parseInt(scoresheet[i]);
+            }
+        }
+        scoresheet[6] = (sum == 0) ? "" : Integer.toString(sum); 
+    }
+
+    public String[] getScoresheet() {
+        return scoresheet;
     }
 
     public String getUsername(){

@@ -34,7 +34,7 @@ public class Dice implements Sprite {
     private ArrayList<Image> diceImages;
 
     private int number, keptPosition;
-    private boolean rollable;
+    private boolean rollable, opponentPlaying;
 
     public Dice(int x, int y, int width, int height){
 
@@ -115,6 +115,10 @@ public class Dice implements Sprite {
 
     public boolean isKept(){
         return (keptPosition == -1) ? false : true;
+    }
+
+    public boolean isOpponentPlaying(){
+        return opponentPlaying;
     }
 
     public void setValue(int value){

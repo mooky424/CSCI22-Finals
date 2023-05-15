@@ -36,12 +36,7 @@ public class GameCanvas extends JComponent{
     private Player p; //dummy for graphics
     private Opponent o; //dummy for graphics
     
-    private String[] dialogue = {
-        "Click \"Roll\" to begin.",
-        "Click the dice you want to keep. You have 2 rolls left.",
-        "Click the dice you want to keep. You have 1 roll left.",
-        "Select your move by clicking a cell on the scoresheet."
-    };
+    private Dialogue d;
     private RollArea ra;
     private ArrayList<Dice> gameDice;
     private Roll r;
@@ -62,6 +57,8 @@ public class GameCanvas extends JComponent{
 
         p = new Player(20,598);
         o = new Opponent(592,27);
+
+        d = new Dialogue(163, 184, 411, 72);
         ra = new RollArea(20, 266, 697, 318);
         r = new Roll(737,676,267,72);
 
@@ -86,6 +83,8 @@ public class GameCanvas extends JComponent{
 
         p.draw(g2d);
         o.draw(g2d);
+
+        d.draw(g2d);
         ra.draw(g2d);
         r.draw(g2d);
 
@@ -112,26 +111,6 @@ public class GameCanvas extends JComponent{
         }
     }
 
-    private boolean isDiceColliding(Dice dice){
-        double[][] diceArea = dice.getClickableArea();
-        /*
-         * [0][0] x
-         * [0][1] x+width
-         * [1][0] y
-         * [1][1] y+height
-         */
-        for (Dice d : gameDice){
-            double[][] dArea = dice.getClickableArea();
-            if (diceArea[0][0] >= dArea[0][1] ||
-                diceArea[0][1] <= dArea[0][0] ||
-                diceArea[1][0] >= dArea[1][1] ||
-                diceArea[1][1] <= dArea[1][0]){
-                    return false;
-            }
-        }
-        return true;
-    }
-
     public Roll getRoll(){
         return r;
     }
@@ -148,13 +127,26 @@ public class GameCanvas extends JComponent{
         repaint();
     }
 
+    public void opponentKeptDice(int index, int position){
+        gameDice.get(index).setKeptPosition(position);
+    }
+
+    public int findDice(Dice d){
+        return gameDice.indexOf(d);
+    }
+
+    public void setDialogue(int choice){
+        d.setDialogue(choice);
+        repaint();
+    }
+
     public void setPlayers(Player p, Opponent o){
         System.out.println("Setting up canvas players");
         this.p.setDetails(p.getUsername(), (ImageIcon) p.getIcon());
         this.o.setDetails(o.getUsername(), (ImageIcon) p.getIcon());
     }
-    
-    public void moveDiceToKeptPosition(ArrayList<Dice> dice){
+
+    public void moveDiceToKeptPlayerPosition(ArrayList<Dice> dice){
         int arrangeDice = 0; 
         for (Dice d : dice){
             if (d.isKept()){
@@ -167,6 +159,82 @@ public class GameCanvas extends JComponent{
             
             double endX = (d.getKeptPosition() >=0) ? 162 + 95*(d.getKeptPosition()) : d.getRollPositionX();
             double endY = (d.getKeptPosition() >=0) ? 630 : d.getRollPositionY();
+
+            int duration = 300; //Animation duration in ms
+            int delay = 15;
+            
+            double x = d.getX();
+            double distanceX = endX - x;
+            double speedX = Math.abs(distanceX)/(duration/delay);
+            double directionX = (distanceX < 0) ? -1 : 1;
+            double velocityX = speedX * directionX;
+            
+            double y = d.getY();
+            double distanceY = endY - y;                
+            double speedY = Math.abs(distanceY)/(duration/delay);
+            double directionY = (distanceY < 0) ? -1 : 1;
+            double velocityY = speedY * directionY;
+
+            Thread animationX = new Thread() {
+                double distanceX = endX - d.getX();
+
+                public void run(){
+                    while(Math.abs(distanceX) > 10){
+                        repaint();
+                        if (distanceX > 5 || distanceX < -5)
+                        d.adjustX(velocityX);
+                        try {
+                            sleep(delay);
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                        distanceX = endX - d.getX();   
+                    }
+                    d.setX(endX);
+                    repaint();
+                    this.interrupt();
+                }
+            };
+            Thread animationY = new Thread() {
+                double distanceY = endY - d.getY();
+
+                public void run(){
+                    while(Math.abs(distanceY) > 10){
+                        repaint();
+                        if (distanceY > 5 || distanceY < -5)
+                            d.adjustY(velocityY);
+                        try {
+                            sleep(delay);
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                        distanceY = endY - d.getY();                  
+                    }
+                    d.setY(endY);
+                    repaint();
+                    this.interrupt();
+                }
+            };
+            animationX.start();
+            animationY.start();
+        }
+    }
+
+    public void moveDiceToKeptOpponentPosition(ArrayList<Dice> dice){
+        int arrangeDice = 0; 
+        for (Dice d : dice){
+            if (d.isKept()){
+                if (d.getKeptPosition() == arrangeDice){
+                    arrangeDice++;
+                } else if (d.getKeptPosition() != arrangeDice){
+                    d.setKeptPosition(arrangeDice++);
+                }                
+            }
+            
+            double endX = (d.getKeptPosition() >=0) ? 20 + 95*(d.getKeptPosition()) : d.getRollPositionX();
+            double endY = (d.getKeptPosition() >=0) ? 59 : d.getRollPositionY();
 
             int duration = 300; //Animation duration in ms
             int delay = 15;
