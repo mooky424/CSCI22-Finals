@@ -1,5 +1,0 @@
-connecting to aws ec2 server using powershell
-
-open a powershell window in the folder containing pem file
-
-ssh -i "yahtzieKey.pem" ec2-user@ec2-54-226-0-126.compute-1.amazonaws.com
