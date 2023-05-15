@@ -1,3 +1,11 @@
+/**
+	class desc w a min of two sentences
+	
+	@author Gabriel L. Salvador (225593)
+    @author Janel Zherry A. Esmeris (222455)
+	@version May ?, 2023
+**/
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -77,4 +85,5 @@ public class GameGUI extends JPanel{
             }
         }
     }
+    
 }

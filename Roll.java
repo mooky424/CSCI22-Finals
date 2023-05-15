@@ -1,3 +1,10 @@
+/**
+	class desc w a min of two sentences
+	
+	@author Gabriel L. Salvador (225593)
+	@version May ?, 2023
+**/
+
 import java.awt.*;
 
 public class Roll implements Sprite {
@@ -72,4 +79,5 @@ public class Roll implements Sprite {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getAngle'");
     }    
+
 }

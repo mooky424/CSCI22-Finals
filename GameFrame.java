@@ -1,3 +1,11 @@
+/**
+	class desc w a min of two sentences
+	
+	@author Gabriel L. Salvador (225593)
+    @author Janel Zherry A. Esmeris (222455)
+	@version May ?, 2023
+**/
+
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -32,7 +40,6 @@ public class GameFrame {
     private ArrayList<ConnectedUser> connected;
 
     public GameFrame(int w, int h) {
-
         frame = new JFrame();
         frame.setMinimumSize(new Dimension(w+16,h+40));
         frame.setMaximumSize(new Dimension(w+16,h+40));
@@ -66,7 +73,7 @@ public class GameFrame {
         gc.addMouseListener(gameMouseListener);
         frame.getContentPane().add(lp);
         
-        JLabel background = new JLabel(new ImageIcon("./assets/background/black.png")); //zo lagay mo dito file path nung bg img
+        JLabel background = new JLabel(new ImageIcon("./assets/background/YahtzieTitleScreen.png"));
         background.setBounds(0, 1, w, h);
         background.setOpaque(false);
         
@@ -135,7 +142,6 @@ public class GameFrame {
         lp.add(g, JLayeredPane.MODAL_LAYER);
         g.add(gc, BorderLayout.CENTER);
     }
-    
     
     ActionListener buttonListener = new ActionListener(){
 
@@ -253,10 +259,13 @@ public class GameFrame {
             }
             gc.setDice(diceValues);
         }
+<<<<<<< HEAD
         if (c[0].equals("setScore")){
             
         }
 
+=======
+>>>>>>> 7902b7e979393ac5d9e3f2292fee5f06d0dc675c
         if (c[0].equals("")){
             
         }
@@ -365,7 +374,6 @@ public class GameFrame {
             }
             gc.repaint();
         }
-        
     };
 
     ListSelectionListener scoreshseetListener = new ListSelectionListener() {
@@ -470,7 +478,6 @@ public class GameFrame {
                 }
             }
         };
-
         serverUpdatesThread.start();
     }
 
@@ -482,4 +489,5 @@ public class GameFrame {
             //TODO
         }
     }
+    
 }

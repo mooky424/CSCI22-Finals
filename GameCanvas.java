@@ -1,3 +1,10 @@
+/**
+	class desc w a min of two sentences
+	
+	@author Gabriel L. Salvador (225593)
+	@version May ?, 2023
+**/
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
@@ -98,4 +105,5 @@ public class GameCanvas extends JComponent{
         this.p.setDetails(p.getUsername(), (ImageIcon) p.getIcon());
         this.o.setDetails(o.getUsername(), (ImageIcon) p.getIcon());
     }
+
 }

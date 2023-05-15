@@ -1,3 +1,11 @@
+/**
+	class desc w a min of two sentences
+	
+	@author Gabriel L. Salvador (225593)
+    @author Janel Zherry A. Esmeris (222455)
+	@version May ?, 2023
+**/
+
 import java.awt.*;
 import java.util.*;
 import javax.swing.*;

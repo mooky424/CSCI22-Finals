@@ -1,3 +1,11 @@
+/**
+	class desc w a min of two sentences
+	
+	@author Gabriel L. Salvador (225593)
+    @author Janel Zherry A. Esmeris (222455)
+	@version May ?, 2023
+**/
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -191,4 +199,5 @@ import java.util.*;
     public static void main(String[] args){
         GameServer gm = new GameServer();
     }
+    
  }

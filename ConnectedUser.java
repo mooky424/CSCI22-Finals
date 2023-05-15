@@ -1,3 +1,11 @@
+/**
+	class desc w a min of two sentences
+	
+	@author Gabriel L. Salvador (225593)
+    @author Janel Zherry A. Esmeris (222455)
+	@version May ?, 2023
+**/
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -15,9 +23,32 @@ public class ConnectedUser extends JButton {
         this.id = id;
         this.username = username;
         this.icon = icon;
+
         icons = new ArrayList<ImageIcon>();
-        icons.add(new ImageIcon((new ImageIcon("./assets/icons/sample.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
-        icons.add(new ImageIcon((new ImageIcon("./assets/icons/sample2.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/1yeji.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/2lia.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/3ryujin.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/4chaeryeong.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/5yuna.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/6karina.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/7giselle.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/8winter.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/9ningning.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/10jennie.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/11jisoo.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/12rose.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/13lisa.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/14irene.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/15seulgi.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/16wendy.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/17joy.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/18yeri.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/19yujin.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/20gaeul.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/21liz.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/22wonyoung.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/23rei.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
+        icons.add(new ImageIcon((new ImageIcon("./assets/icons/24leeseo.png")).getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH)));
 
         setText(username);
         setIcon(icons.get(icon));
@@ -40,4 +71,5 @@ public class ConnectedUser extends JButton {
     public String getUsername(){
         return username;
     }
+
 }

@@ -1,3 +1,10 @@
+/**
+	class desc w a min of two sentences
+	
+	@author Gabriel L. Salvador (225593)
+	@version May ?, 2023
+**/
+
 import javax.swing.*;
 import java.awt.*;
 import java.net.*;
@@ -133,4 +140,5 @@ public class Player implements Sprite{
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getAngle'");
     }
+
 }
