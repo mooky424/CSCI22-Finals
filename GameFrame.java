@@ -260,7 +260,6 @@ public class GameFrame {
         if (c[0].equals("setScore")){
             
         }
-
         if (c[0].equals("")){
             
         }
