@@ -30,6 +30,8 @@ public class GameStarter {
     public static void main (String[] args) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
 		// Rollbar. (2021, March 24). How to use the Throws keyword in Java (and when to use Throw). https://rollbar.com/blog/how-to-use-the-throws-keyword-in-java-and-when-to-use-throw
         GameFrame lf = new GameFrame(1024, 768);
+        String ip = args.length > 0 ? args[0] : "localhost";
+        lf.setIP(ip);
         lf.setupMainMenu();
 
 		// Bro Code. (2020, October 19). Java audio 🔊 [Video file]. YouTube. https://youtu.be/SyZQVJiARTQ?list=RDCMUC4SVo0Ue36XCfOyb5Lh1viQ

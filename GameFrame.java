@@ -51,6 +51,7 @@ public class GameFrame {
 
     private boolean waitingforResponse;
     
+    private static String ip;
     private Socket s;
     private DataInputStream in;
     private DataOutputStream out;
@@ -172,7 +173,7 @@ public class GameFrame {
             if (source == mm.play) {
                 try{
                     System.out.print("Connecting to server... ");
-                    s = new Socket("localhost", 64820);
+                    s = new Socket(ip, 64820);
                     out = new DataOutputStream(s.getOutputStream());
                     in = new DataInputStream(s.getInputStream());
                     setUpServerThread();
@@ -339,6 +340,10 @@ public class GameFrame {
             }
         }
         lm.updateConnected(connected);
+    }
+
+    public void setIP(String ip){
+        this.ip = ip;
     }
     
     MouseListener lobbyMouseListener = new MouseAdapter() {

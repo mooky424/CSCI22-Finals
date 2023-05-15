@@ -141,7 +141,7 @@ public class GameCanvas extends JComponent{
     public void setPlayers(Player p, Opponent o){
         System.out.println("Setting up canvas players");
         this.p.setDetails(p.getUsername(), (ImageIcon) p.getIcon());
-        this.o.setDetails(o.getUsername(), (ImageIcon) p.getIcon());
+        this.o.setDetails(o.getUsername(), (ImageIcon) o.getIcon());
     }
 
     public void moveDiceToKeptPlayerPosition(ArrayList<Dice> dice){
