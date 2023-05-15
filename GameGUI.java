@@ -1,6 +1,6 @@
 /**
-	This class extends JPanel and is responsible for making
-    the GUI in which the players play the game. It creates
+	This class extends JPanel and is responsible for making a GUI
+    component in which the players play the game. It also creates
     instances of the GameCanvas and GameRules classes.
 	
 	@author Gabriel L. Salvador (225593)

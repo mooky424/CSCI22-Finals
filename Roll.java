@@ -1,5 +1,6 @@
 /**
-	class desc w a min of two sentences
+	This class implements the Sprite interface. It represents
+    the roll button in the game.
 	
 	@author Gabriel L. Salvador (225593)
     @author Janel Zherry A. Esmeris (222455)

@@ -1,6 +1,6 @@
 /**
-	This class implements Sprite. It is responsible for the player's
-    details and functionality.
+	This class implements the Sprite interface. It represents a player
+    in the game and is responsible for their details and functionality.
 	
 	@author Gabriel L. Salvador (225593)
     @author Janel Zherry A. Esmeris (222455)

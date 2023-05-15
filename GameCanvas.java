@@ -1,6 +1,7 @@
 /**
 	This class extends JComponent and overrides the paintComponent method
-    to draw the game components. isa pa ulet sentence
+    to draw the game components. It handles user interactions in the game
+    and animates dice movements.
 	
 	@author Gabriel L. Salvador (225593)
     @author Janel Zherry A. Esmeris (222455)

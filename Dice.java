@@ -1,6 +1,8 @@
 /**
-	This class implements Sprite. It is responsible for drawing
-    the dice and adjusting its properties.
+	This class implements the Sprite interface. It is responsible
+    for drawing the dice and adjusting its properties. It also
+    handles click events and keeps track of the dice's position
+    and value.
 	
 	@author Gabriel L. Salvador (225593)
     @author Janel Zherry A. Esmeris (222455)

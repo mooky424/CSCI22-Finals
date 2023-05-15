@@ -1,6 +1,7 @@
 /**
-	This class starts the game from the player's side.
-	It also loops a sound file.
+	This class sets up the game's main frame and starts the game
+	from the player's side. It also loops a sound file in the
+	background.
 	
 	@author Gabriel L. Salvador (225593)
     @author Janel Zherry A. Esmeris (222455)

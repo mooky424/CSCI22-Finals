@@ -1,6 +1,8 @@
 /**
-	This class manages the game server's functionality. It also
-    creates an instance of and starts the server.
+	This class manages the game server's functionality. It creates a
+    server socket, accepts client connections, and handles communication
+    with and between clients. It also creates an instance of and starts
+    the server.
 	
 	@author Gabriel L. Salvador (225593)
     @author Janel Zherry A. Esmeris (222455)

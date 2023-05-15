@@ -1,6 +1,8 @@
 /**
-	This class sets up the main JFrame for the player.
-    wahahahahah isa pang sentence
+	This class sets up the main JFrame for the player. It extends
+    JFrame and uses and manages various GUIs. It also handles user
+    interactions and communicates with a server to allow multiplayer
+    functionality.
 	
 	@author Gabriel L. Salvador (225593)
     @author Janel Zherry A. Esmeris (222455)
