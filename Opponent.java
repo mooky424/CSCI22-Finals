@@ -104,6 +104,7 @@ public class Opponent implements Sprite {
     public void updateScoresheet(int row, String score){
         scoresheet[row] = score;
         int sum = 0;
+        int total = 0;
         for (int i = 0 ; i < 6; i++){
             if (scoresheet[i] == ""){
                 sum = 0;
@@ -112,7 +113,16 @@ public class Opponent implements Sprite {
                 sum += Integer.parseInt(scoresheet[i]);
             }
         }
+        for (int i = 0 ; i < 15; i++){
+            if (scoresheet[i] == ""){
+                total = 0;
+                break;
+            } else {
+                total += Integer.parseInt(scoresheet[i]);
+            }
+        }
         scoresheet[6] = (sum == 0) ? "" : Integer.toString(sum); 
+        scoresheet[15] = (total == 0) ? "" : Integer.toString(total); 
     }
 
     public String[] getScoresheet() {

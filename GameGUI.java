@@ -21,8 +21,9 @@
 */
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class GameGUI extends JPanel{
 
@@ -53,8 +54,11 @@ public class GameGUI extends JPanel{
         {"Yahtzee", "", ""},
         {"TOTAL SCORE", "", ""}
     };
+
     Player p;
     Opponent o;
+
+    JButton backToLobby, exit;
 
     public GameGUI(int w, int h, ListSelectionListener scoreshseetListener){
 
@@ -62,7 +66,6 @@ public class GameGUI extends JPanel{
         this.h = h;
         
         setBounds(0,0,w,h);
-
         setLayout(null);
         
         scoresheetPanel = new JPanel(new BorderLayout());
@@ -78,7 +81,7 @@ public class GameGUI extends JPanel{
         scoresheet.setIntercellSpacing(new Dimension(10,10));
         scoresheet.setFont(new Font("Sans Serif", Font.BOLD, 12));
 
-        scoresheet.setCellSelectionEnabled(true);
+        scoresheet.setCellSelectionEnabled(false);
         scoresheet.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scoresheet.getSelectionModel().addListSelectionListener(scoreshseetListener);
 
@@ -87,6 +90,14 @@ public class GameGUI extends JPanel{
         scoresheetPanel.add(scoresheet);
 
         gr = new GameRules();
+
+        winnerPanel = new JPanel();
+        winnerPanel.setLayout(new BoxLayout(winnerPanel, BoxLayout.Y_AXIS));
+        winnerPanel.setOpaque(false);
+        winnerPanel.setBounds(0,0,w,h);
+
+        backToLobby = new JButton("Back to Lobby");
+        exit = new JButton("Exit");        
     }
 
     public void setPlayers(Player p, Opponent o){
@@ -113,25 +124,7 @@ public class GameGUI extends JPanel{
             } else {
                 scoresheet.setValueAt("",i,1);
             }
-        }
-
-        if(scoresheet.getValueAt(15, 1) != "" && scoresheet.getValueAt(15, 2) != ""){
-            winnerPanel = new JPanel();
-            winnerPanel.setLayout(new BoxLayout(winnerPanel, BoxLayout.Y_AXIS));
-            winnerPanel.setOpaque(false);
-            winnerPanel.setBounds(0,0,w,h);
-            removeAll();
-            int playerScore = (int) scoresheet.getValueAt(15, 1);
-            int opponentScore = (int) scoresheet.getValueAt(15, 2);
-            JLabel winner = new JLabel(playerScore > opponentScore ? "You win!" : (o.getUsername() + " wins!"));
-            winner.setFont(new Font("Sans Serif", Font.BOLD, 36));
-
-            winnerPanel.add(Box.createVerticalGlue());
-            winnerPanel.add(winner);
-            winnerPanel.add(Box.createVerticalGlue());
-
-            add(winnerPanel);
-        }
+        }        
     }
 
     public void updateOpponentScore(Opponent o){
@@ -144,24 +137,29 @@ public class GameGUI extends JPanel{
                 scoresheet.setValueAt("",i,2);
             }
         }
+    }
 
-        if(scoresheet.getValueAt(15, 1) != "" && scoresheet.getValueAt(15, 2) != ""){
-            winnerPanel = new JPanel();
-            winnerPanel.setLayout(new BoxLayout(winnerPanel, BoxLayout.Y_AXIS));
-            winnerPanel.setOpaque(isOpaque());
-            winnerPanel.setBounds(0,0,w,h);
-            removeAll();
-            int playerScore = (int) scoresheet.getValueAt(15, 1);
-            int opponentScore = (int) scoresheet.getValueAt(15, 2);
-            JLabel winner = new JLabel(playerScore > opponentScore ? "You win!" : (o.getUsername() + " wins!"));
-            winner.setFont(new Font("Sans Serif", Font.BOLD, 36));
+    public void setWinner(ActionListener buttonListener){
+        String playerScore = (String) scoresheet.getValueAt(15, 1);
+        String opponentScore = (String) scoresheet.getValueAt(15, 2);            
+        JLabel winner = new JLabel(Integer.parseInt(playerScore) > Integer.parseInt(opponentScore) ? "You win!" : (o.getUsername() + " wins!"));
+        winner.setFont(new Font("Sans Serif", Font.BOLD, 36));
+        winner.setAlignmentX(CENTER_ALIGNMENT);
+        
+        backToLobby.addActionListener(buttonListener);
+        exit.addActionListener(buttonListener);
 
-            winnerPanel.add(Box.createVerticalGlue());
-            winnerPanel.add(winner);
-            winnerPanel.add(Box.createVerticalGlue());
-
-            add(winnerPanel);
-        }
+        removeAll();
+        winnerPanel.add(Box.createVerticalGlue());
+        winnerPanel.add(winner);
+        winnerPanel.add(Box.createVerticalStrut(8));
+        winnerPanel.add(backToLobby);
+        winnerPanel.add(Box.createVerticalStrut(8));
+        winnerPanel.add(exit);
+        winnerPanel.add(Box.createVerticalGlue());
+        add(winnerPanel);
+        revalidate();
+        repaint();
     }
     
 }

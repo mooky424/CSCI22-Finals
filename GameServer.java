@@ -100,14 +100,17 @@ import java.util.*;
             String[] c = command.split(" ");
             String msg = "";
             if (c[0].equals("create")){
-                msg = "addUser";
                 username = c[1];
                 int icon = Integer.parseInt(c[2]);
-                msg = msg + " " + id + " " + username + " " + icon; 
+                msg = "addUser " + id + " " + username + " " + icon; 
                 createdUser(username, icon, id);
                 sendToAll(msg, id);
                 lobbyUserUpdates.add(msg);
                 return;
+            }
+            if (c[0].equals("edit")){
+                int sender = id;
+                sendToAll("delUser " + sender, sender);
             }
             if (c[0].equals("challenge")){
                 System.out.println(command);
@@ -161,6 +164,11 @@ import java.util.*;
                 int receiver = Integer.parseInt(c[1]);
                 msg = "keptDice " + c[2] + " " + c[3];
                 send(msg, receiver);
+            }
+            if (c[0].equals("resetDice")){
+                int receiver = Integer.parseInt(c[1]);
+                msg = "resetDice";
+                send(msg,receiver);
             }
             if (c[0].equals("setScore")){
                 int receiver = Integer.parseInt(c[1]);

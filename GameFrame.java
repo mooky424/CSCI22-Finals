@@ -42,19 +42,24 @@ public class GameFrame {
     private GameGUI g;
     private GameCanvas gc;
     
+    private boolean isLobbyEnabled = false;
+    private boolean isGameEnabled = true;
+    private boolean diceClickable = false;
+
     private boolean waitingforResponse;
     
     private Socket s;
     private DataInputStream in;
     private DataOutputStream out;
-
+    
     private Player p;
     private Opponent o;
     private ConnectedUser selected;
     private ArrayList<ConnectedUser> connected;
-
+    
     public GameFrame(int w, int h) {
         frame = new JFrame();
+        frame.setBackground(Color.decode("#ff999e"));
         frame.setMinimumSize(new Dimension(w+16,h+40));
         frame.setMaximumSize(new Dimension(w+16,h+40));
         frame.setLocationRelativeTo(null);
@@ -182,13 +187,23 @@ public class GameFrame {
                 String username = cs.usernameField.getText();
                 int icon = cs.currentImage;
                 System.out.println("Creating User");
-                write("create " + username + " " + Integer.toString(icon));               
+                write("create " + username + " " + icon);               
             }
             if (source == lm.challenge){
                 System.out.println("Challenging " + selected.getUsername());
                 write("challenge " + selected.getId());
                 setWaitingPopup();
                 waitingforResponse = true;
+            }
+            if (source == lm.edit){
+                setupCharSelect();
+                write("edit");
+            }
+            if (source == g.exit){
+                frame.dispose();
+            }            
+            if (source == g.backToLobby){
+                write("create " + p.getUsername() + " " + cs.currentImage);  
             }
         }
     };        
@@ -260,6 +275,7 @@ public class GameFrame {
             p.setTurn(true);
             gc.setDialogue(1);
             isGameEnabled = true;
+            diceClickable = false;
             System.out.println("It's my turn");
         }
         if (c[0].equals("waitTurn")){
@@ -279,9 +295,20 @@ public class GameFrame {
             gc.opponentKeptDice(Integer.parseInt(c[1]), Integer.parseInt(c[2]));
             gc.moveDiceToKeptOpponentPosition(gc.getGameDice());
         }
+        if (c[0].equals("resetDice")){
+            for (Dice d : gc.getGameDice()){
+                if(d.getKeptPosition() >= 0){
+                    d.setKeptPosition(-1);
+                }
+            }
+            gc.moveDiceToKeptPlayerPosition(gc.getGameDice());
+        }
         if (c[0].equals("setScore")){
             o.updateScoresheet(Integer.parseInt(c[2]),c[3]);
             g.updateOpponentScore(o);
+            if(g.scoresheet.getValueAt(15, 1) != "" && g.scoresheet.getValueAt(15, 2) != ""){
+                g.setWinner(buttonListener);
+            }
         }
         if (c[0].equals("")){
             
@@ -296,12 +323,12 @@ public class GameFrame {
         }
         return null;
     }
-
+    
     public void addUser(int id, String username, int icon){
         connected.add(new ConnectedUser(id, username, icon, lobbyMouseListener));
         lm.updateConnected(connected);
     }
-
+    
     public void removeUser(int id){
         for (int i = 0; i < connected.size(); i++){
             if (connected.get(i).id == id){
@@ -310,8 +337,7 @@ public class GameFrame {
         }
         lm.updateConnected(connected);
     }
-
-    boolean isLobbyEnabled = false;
+    
     MouseListener lobbyMouseListener = new MouseAdapter() {
         ConnectedUser hovered;
         public void mouseEntered(MouseEvent me){
@@ -346,7 +372,6 @@ public class GameFrame {
         }
     };    
 
-    boolean isGameEnabled = true;
     MouseListener gameMouseListener = new MouseAdapter() {
         int totalKept = 0;
         int mouseX = 0;
@@ -360,6 +385,7 @@ public class GameFrame {
             mouseY = me.getY();
             Object obj = gc.getSprite(mouseX,mouseY);
             if (obj != null){
+                
                 if (obj.getClass() == Roll.class){
 
                     if(!p.getTurn() || p.getRolls() == 0){
@@ -367,6 +393,10 @@ public class GameFrame {
                     } else {
                         p.useRoll();
                         gc.setDialogue(4 - p.getRolls());
+                    }
+
+                    if (!diceClickable){
+                        diceClickable = true;
                     }
 
                     gc.rollDice();
@@ -390,7 +420,7 @@ public class GameFrame {
                     }
                     write(command);
                 }
-                if (obj.getClass() == Dice.class){
+                if (obj.getClass() == Dice.class && diceClickable){
 
                     Dice d = (Dice) obj;
                     totalKept += d.click(totalKept);
@@ -405,9 +435,8 @@ public class GameFrame {
     ListSelectionListener scoreshseetListener = new ListSelectionListener() {
         public void valueChanged(ListSelectionEvent le){
             int selectedRow = g.scoresheet.getSelectedRow();
-            int selectedColumn = g.scoresheet.getSelectedColumn();
 
-            String selectedData = (String) g.scoresheet.getValueAt(selectedRow, selectedColumn);
+            String selectedData = (String) g.scoresheet.getValueAt(selectedRow, 1);
             if (selectedData != p.getScoresheet()[selectedRow]){
                 p.updateScoresheet(selectedRow, selectedData);
                 g.updatePlayerScore(p);
@@ -416,6 +445,17 @@ public class GameFrame {
                     write("passTurn " + o.getId());
                     gc.setDialogue(0);
                 }
+                for (Dice d : gc.getGameDice()){
+                    if(d.getKeptPosition() >= 0){
+                        d.click(0);
+                    }
+                }
+                write("resetDice " + o.getId());
+                gc.moveDiceToKeptPlayerPosition(gc.getGameDice());
+            }
+
+            if (g.scoresheet.getValueAt(15, 1) != "" && g.scoresheet.getValueAt(15, 2) != ""){
+                g.setWinner(buttonListener);
             }
         }
     };

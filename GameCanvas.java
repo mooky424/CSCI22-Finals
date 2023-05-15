@@ -232,6 +232,7 @@ public class GameCanvas extends JComponent{
             double endX = (d.getKeptPosition() >=0) ? 20 + 95*(d.getKeptPosition()) : d.getRollPositionX();
             double endY = (d.getKeptPosition() >=0) ? 59 : d.getRollPositionY();
 
+            
             int duration = 300; //Animation duration in ms
             int delay = 15;
             

@@ -74,9 +74,7 @@ public class Dice implements Sprite {
             rollable = false;
             System.out.println("You kept a dice");
             keptPosition = totalKept;
-            System.out.println("Kept pos: " + keptPosition);            
-            rollPositionX = x;
-            rollPositionY = y;
+            System.out.println("Kept pos: " + keptPosition);       
             return 1;
         } else {
             rollable = true;
